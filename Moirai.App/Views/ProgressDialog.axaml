@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        x:Class="MOIRAI.Views.ProgressDialog"
+        x:DataType="vm:ProgressDialogViewModel"
+        Width="440" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        WindowDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent">
+
+    <Border Background="{DynamicResource CardBg}" CornerRadius="14"
+            BorderBrush="{DynamicResource BorderSoft}" BorderThickness="1"
+            Padding="28,24" Margin="12">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.45" BlurRadius="24" OffsetX="0" OffsetY="6"/>
+        </Border.Effect>
+        <StackPanel Spacing="14">
+            <TextBlock Text="{Binding Title}" FontSize="17" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}"/>
+
+            <ProgressBar Minimum="0" Maximum="1" Value="{Binding Fraction}"
+                         IsIndeterminate="{Binding IsIndeterminate}"
+                         Height="8" CornerRadius="4"
+                         Foreground="{DynamicResource Accent}"
+                         Background="{DynamicResource CardBg2}"/>
+
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="muted" Text="{Binding Detail}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding PercentText}"
+                           Foreground="{DynamicResource Accent}" FontWeight="SemiBold"/>
+            </Grid>
+
+            <Button Content="{Binding CancelLabel}" Classes="ghost"
+                    HorizontalAlignment="Right" Padding="16,7"
+                    Command="{Binding CancelCommand}"
+                    IsEnabled="{Binding !IsCancelling}"/>
+        </StackPanel>
+    </Border>
+</Window>

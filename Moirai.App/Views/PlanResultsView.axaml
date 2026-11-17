@@ -1,0 +1,496 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MOIRAI.ViewModels"
+             xmlns:views="using:MOIRAI.Views"
+             xmlns:b="using:MOIRAI.Views.Behaviors"
+             xmlns:conv="using:Avalonia.Data.Converters"
+             x:Class="MOIRAI.Views.PlanResultsView"
+             x:DataType="vm:PlanViewModel">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="CampaignDetailTemplate" x:DataType="vm:CampaignDetailRow">
+            <Border Classes="row">
+                <StackPanel Spacing="3">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="14" VerticalAlignment="Center"/>
+                        <Border Grid.Column="1" CornerRadius="999" Padding="9,1" BorderThickness="1"
+                                BorderBrush="{Binding StatusBrush}">
+                            <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{Binding StatusBrush}"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock Classes="muted" Text="{Binding Dates, StringFormat='Dates: {0}'}"/>
+                    <TextBlock Classes="muted" Text="{Binding ActualEnd, StringFormat='Last sortie: {0}'}"/>
+                    <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Aircraft, StringFormat='Aircraft: {0}'}"/>
+                    <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Pilots, StringFormat='Pilots: {0}'}"/>
+                    <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Engineers, StringFormat='FTEs: {0}'}"/>
+
+                    <Border IsVisible="{Binding IsSlipping}" Margin="0,5,0,0"
+                            Background="{DynamicResource CardBg}"
+                            BorderBrush="{Binding StatusBrush}" BorderThickness="3,0,0,0"
+                            CornerRadius="4" Padding="11,7">
+                        <StackPanel Spacing="3">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="{Binding Glyph}" FontSize="14" Foreground="{Binding StatusBrush}"/>
+                                <TextBlock Text="{Binding Headline}" FontWeight="SemiBold" Foreground="{Binding StatusBrush}"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding Reason}" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock Text="{Binding Advice}" TextWrapping="Wrap"
+                                       Classes="muted" IsVisible="{Binding HasAdvice}"/>
+                            <TextBlock Text="{Binding Breakdown, StringFormat='Blocked days · {0}'}"
+                                       Classes="muted" TextWrapping="Wrap" IsVisible="{Binding HasBreakdown}"/>
+                            <TextBlock Text="{Binding Phases, StringFormat='Phases · {0}'}"
+                                       Classes="muted" TextWrapping="Wrap" IsVisible="{Binding HasPhases}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="14">
+
+            <Border Classes="card" IsVisible="{Binding !HasResult, Mode=OneWay}">
+                <TextBlock Classes="muted" TextWrapping="Wrap"
+                           Text="Run a scenario to see results."/>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding HasResult}">
+                <StackPanel Spacing="6">
+                    <TextBlock Classes="h2" Foreground="{DynamicResource Success}"
+                               IsVisible="{Binding ShowSuccess}"
+                               Text="Delivered"/>
+                    <TextBlock Classes="h2" Foreground="{DynamicResource Warning}"
+                               IsVisible="{Binding ShowWarning}"
+                               Text="At risk"/>
+                    <TextBlock Classes="muted" Text="{Binding SummaryText}"/>
+                    <TextBlock Classes="muted" Text="{Binding CurrentScenarioLabel}"/>
+                    <TextBlock Foreground="{DynamicResource Accent}" Text="{Binding ExecutionSummary}"
+                               IsVisible="{Binding HasExecution}"/>
+                    <TextBlock Foreground="{DynamicResource Accent}" Text="{Binding PinSummary}"
+                               IsVisible="{Binding HasPins}"
+                               ToolTip.Tip="Right-click a sortie box on the Gantt to pin or unpin it."/>
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                        <Button Content="Export to Excel…" Classes="ghost"
+                                Command="{Binding ExportExcelCommand}"/>
+                        <Button Content="Export PDF report…" Classes="ghost"
+                                Command="{Binding ExportPdfCommand}"/>
+                        <Button Content="Record actuals…" Classes="ghost"
+                                Command="{Binding RecordActualsCommand}"/>
+                        <Button Content="Clear actuals" Classes="ghost"
+                                Command="{Binding ClearActualsCommand}"
+                                IsVisible="{Binding HasExecution}" ToolTip.Tip="Deletes recorded actuals and replans the full horizon."/>
+                        <Button Content="Clear pins" Classes="ghost"
+                                Command="{Binding ClearPinsCommand}"
+                                IsVisible="{Binding HasPins}" ToolTip.Tip="Removes every sortie pin. Run again to replan freely."/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Expander Classes="panel" IsExpanded="True" IsVisible="{Binding HasFamilyResults}">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Scenario comparison"/>
+                </Expander.Header>
+                <StackPanel Spacing="6">
+
+                    <ItemsControl ItemsSource="{Binding FamilyResults}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:FamilyResultRow">
+                                <Border Classes="row" Margin="{Binding Indent}" Padding="12,8">
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"/>
+                                            <Border CornerRadius="999" Padding="8,1" BorderThickness="1"
+                                                    BorderBrush="{DynamicResource Accent}" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Relation}" FontSize="11"
+                                                           Foreground="{DynamicResource Accent}"/>
+                                            </Border>
+                                            <TextBlock Classes="muted" Text="◀ current" FontSize="11"
+                                                       VerticalAlignment="Center" IsVisible="{Binding IsActive}"/>
+                                        </StackPanel>
+                                        <TextBlock Classes="muted" Text="{Binding Status}" FontSize="11"/>
+                                        <ItemsControl ItemsSource="{Binding Campaigns}" IsVisible="{Binding HasRun}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:FamilyCampaignCell">
+                                                    <TextBlock Text="{Binding Text}" Foreground="{Binding Brush}"
+                                                               FontSize="11" Margin="0,0,14,2"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Expander>
+
+            <Expander Classes="panel" IsExpanded="True" IsVisible="{Binding HasDiagnostics}">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Diagnostics"/>
+                </Expander.Header>
+                <StackPanel Spacing="6">
+                    <ItemsControl ItemsSource="{Binding Diagnostics}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource Warning}" Margin="0,0,0,4"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Expander>
+
+            <Grid ColumnDefinitions="*,14,*" IsVisible="{Binding HasResult}">
+                <StackPanel Grid.Column="0" Spacing="14" VerticalAlignment="Top">
+                <Expander Classes="panel" IsExpanded="True">
+                    <Expander.Header>
+                        <TextBlock Classes="h2" Text="Workload (per person)"/>
+                    </Expander.Header>
+                    <StackPanel Spacing="6">
+                        <Grid ColumnDefinitions="*,76,64,68,64,52,52" Margin="4,0">
+                            <TextBlock Grid.Column="0" Classes="label" Text="Person"/>
+                            <TextBlock Grid.Column="1" Classes="label" Text="Role"/>
+                            <TextBlock Grid.Column="2" Classes="label" Text="Sorties"/>
+                            <TextBlock Grid.Column="3" Classes="label" Text="Flight h"/>
+                            <TextBlock Grid.Column="4" Classes="label" Text="Duty h"/>
+                            <TextBlock Grid.Column="5" Classes="label" Text="Reh"/>
+                            <TextBlock Grid.Column="6" Classes="label" Text="Idle"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Workload}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:WorkloadRow">
+                                    <Border Classes="row">
+                                        <StackPanel Spacing="2">
+                                            <Grid ColumnDefinitions="*,76,64,68,64,52,52">
+                                                <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Role}" Classes="muted"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Sorties}"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding FlightHours, StringFormat='{}{0:0.#}'}"/>
+                                                <TextBlock Grid.Column="4" Text="{Binding DutyHours, StringFormat='{}{0:0.#}'}"/>
+                                                <TextBlock Grid.Column="5" Text="{Binding Rehearsals}"/>
+                                                <TextBlock Grid.Column="6" Text="{Binding IdleDays}" Classes="muted"/>
+                                            </Grid>
+                                            <TextBlock Classes="muted" TextWrapping="Wrap" FontSize="11"
+                                                       Text="{Binding IdleBreakdown}"
+                                                       IsVisible="{Binding IdleBreakdown, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Expander>
+
+                <Expander Classes="panel" IsExpanded="True">
+                    <Expander.Header>
+                        <TextBlock Classes="h2" Text="Aircraft utilization"/>
+                    </Expander.Header>
+                    <StackPanel Spacing="6">
+                        <Grid ColumnDefinitions="*,64,56,52" Margin="4,0">
+                            <TextBlock Grid.Column="0" Classes="label" Text="Aircraft"/>
+                            <TextBlock Grid.Column="1" Classes="label" Text="Sorties"/>
+                            <TextBlock Grid.Column="2" Classes="label" Text="Days"/>
+                            <TextBlock Grid.Column="3" Classes="label" Text="Idle"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding AircraftUtilization}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:AircraftUtilizationRow">
+                                    <Border Classes="row">
+                                        <StackPanel Spacing="2">
+                                            <Grid ColumnDefinitions="*,64,56,52">
+                                                <TextBlock Grid.Column="0" Text="{Binding Name}" TextWrapping="Wrap"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Sorties}"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding DaysUsed}" Classes="muted"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding IdleDays}" Classes="muted"/>
+                                            </Grid>
+                                            <TextBlock Classes="muted" TextWrapping="Wrap"
+                                                       Text="{Binding CampaignBreakdown}"/>
+                                            <TextBlock Classes="muted" TextWrapping="Wrap" FontSize="11"
+                                                       Text="{Binding IdleBreakdown, StringFormat='Idle: {0}'}"
+                                                       IsVisible="{Binding IdleBreakdown, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Expander>
+                </StackPanel>
+
+                <Expander Grid.Column="2" Classes="panel" IsExpanded="True" VerticalAlignment="Top">
+                    <Expander.Header>
+                        <TextBlock Classes="h2" Text="Campaign details"/>
+                    </Expander.Header>
+                    <StackPanel Spacing="8">
+                        <ItemsControl ItemsSource="{Binding ResultGroups}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CampaignResultGroup">
+                                    <StackPanel Spacing="8" Margin="0,0,0,6">
+                                        <Expander IsVisible="{Binding HasHeader}" IsExpanded="True"
+                                                  HorizontalAlignment="Stretch">
+                                            <Expander.Header>
+                                                <Grid ColumnDefinitions="Auto,*,Auto" MinWidth="340"
+                                                      HorizontalAlignment="Stretch">
+                                                    <TextBlock Grid.Column="0" Text="◈" FontSize="15" Margin="0,0,9,0"
+                                                               Foreground="{Binding Header.StatusBrush}" VerticalAlignment="Center"/>
+                                                    <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Header.Name}" FontSize="15" FontWeight="SemiBold"/>
+                                                        <TextBlock Classes="muted" Text="{Binding Header.Detail}"/>
+                                                    </StackPanel>
+                                                    <Border Grid.Column="2" CornerRadius="999" Padding="9,1" Margin="10,0,0,0"
+                                                            BorderThickness="1" VerticalAlignment="Center"
+                                                            BorderBrush="{Binding Header.StatusBrush}">
+                                                        <TextBlock Text="{Binding Header.Status}" FontSize="12"
+                                                                   FontWeight="SemiBold" Foreground="{Binding Header.StatusBrush}"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Expander.Header>
+                                            <StackPanel Spacing="8" Margin="0,8,0,0">
+                                                <Border IsVisible="{Binding Header.IsSlipping}"
+                                                        Background="{DynamicResource CardBg}"
+                                                        BorderBrush="{Binding Header.StatusBrush}" BorderThickness="3,0,0,0"
+                                                        CornerRadius="4" Padding="11,7">
+                                                    <StackPanel Spacing="3">
+                                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                                            <TextBlock Text="{Binding Header.WhyGlyph}" FontSize="14"
+                                                                       Foreground="{Binding Header.StatusBrush}"/>
+                                                            <TextBlock Text="{Binding Header.WhyHeadline}" FontWeight="SemiBold"
+                                                                       Foreground="{Binding Header.StatusBrush}"/>
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Header.WhyReason}" TextWrapping="Wrap"
+                                                                   Foreground="{DynamicResource TextPrimary}"/>
+                                                        <TextBlock Text="{Binding Header.WhyBreakdown, StringFormat='Blocked days · {0}'}"
+                                                                   Classes="muted" TextWrapping="Wrap"
+                                                                   IsVisible="{Binding Header.WhyBreakdown, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <ItemsControl ItemsSource="{Binding Campaigns}"
+                                                              ItemTemplate="{StaticResource CampaignDetailTemplate}"/>
+                                            </StackPanel>
+                                        </Expander>
+
+                                        <ItemsControl IsVisible="{Binding !HasHeader}"
+                                                      ItemsSource="{Binding Campaigns}"
+                                                      ItemTemplate="{StaticResource CampaignDetailTemplate}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Expander>
+            </Grid>
+
+            <Border Classes="card" IsVisible="{Binding HasResult}">
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto,16,Auto,16,Auto">
+                        <TextBlock Grid.Column="0" Classes="h2" Text="Filter (Gantt &amp; schedule)"
+                                   VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Content="Mark idle days"
+                                  IsChecked="{Binding ShowIdleMarkers}" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="3" Content="Hide non-flyable days"
+                                  IsChecked="{Binding HideNonFlyableDays}"
+                                  VerticalAlignment="Center" ToolTip.Tip="Hide unusable days unless they contain scheduled work."/>
+                        <Button Grid.Column="5" Classes="ghost" Content="Clear" Padding="10,4"
+                                Command="{Binding ClearFiltersCommand}"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,14,*,14,*,14,*">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Classes="label" Text="Campaigns"/>
+                            <ItemsControl ItemsSource="{Binding CampaignFilterGroups}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ScopeGroupNode">
+                                        <StackPanel Spacing="2" Margin="0,0,0,6">
+                                            <CheckBox Content="{Binding Name}" FontWeight="SemiBold"
+                                                      IsThreeState="True"
+                                                      IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
+                                            <ItemsControl ItemsSource="{Binding Children}" Margin="20,0,0,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                                  Margin="0,0,12,2"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding UngroupedFilter}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Classes="label" Text="Aircraft"/>
+                            <ItemsControl ItemsSource="{Binding AircraftFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" Spacing="4">
+                            <TextBlock Classes="label" Text="Pilots"/>
+                            <ItemsControl ItemsSource="{Binding PilotFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6" Spacing="4">
+                            <TextBlock Classes="label" Text="FTEs"/>
+                            <ItemsControl ItemsSource="{Binding FteFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Classes="muted" Text="{Binding FilterSummary}"
+                               IsVisible="{Binding IsFiltered}"/>
+                </StackPanel>
+            </Border>
+
+            <Expander Classes="panel" IsExpanded="True" IsVisible="{Binding HasResult}">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Schedule (Gantt)"/>
+                </Expander.Header>
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,12,Auto,10,Auto,16,Auto">
+                        <ItemsControl Grid.Column="0" ItemsSource="{Binding LegendItems}"
+                                      VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:GanttLegendItem">
+                                    <StackPanel Orientation="Horizontal" Spacing="5"
+                                                Margin="0,2,14,2" VerticalAlignment="Center">
+                                        <Border Width="12" Height="12" CornerRadius="2"
+                                                Background="{Binding Swatch}"
+                                                IsVisible="{Binding IsSwatchVisible}"
+                                                BorderBrush="{DynamicResource BorderSoft}"
+                                                BorderThickness="1" VerticalAlignment="Center"/>
+                                        <TextBlock Classes="muted" Text="{Binding Label}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Grid.Column="2" Classes="muted" Text="Zoom"
+                                   VerticalAlignment="Center"/>
+                        <Slider Grid.Column="4" x:Name="GanttZoom" Minimum="0.5" Maximum="2.5"
+                                Value="1" Width="180" VerticalAlignment="Center"/>
+                        <Button Grid.Column="6" Classes="ghost" Content="Open in window ⧉" Padding="10,4"
+                                Command="{Binding OpenGanttWindowCommand}"/>
+                    </Grid>
+                    <ScrollViewer x:Name="GanttScroll" HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto" MaxHeight="440"
+                                  b:MiddleButtonPan.Enabled="True">
+                        <LayoutTransformControl x:Name="GanttScaler">
+                            <views:GanttControl x:Name="GanttChart" Data="{Binding Gantt}"
+                                                HideEmptyDays="{Binding HideNonFlyableDays}"
+                                                ShowIdleMarkers="{Binding ShowIdleMarkers}"/>
+                        </LayoutTransformControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Expander>
+
+            <Expander Classes="panel" IsExpanded="True" IsVisible="{Binding HasResult}">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Test points (burn-down)"/>
+                </Expander.Header>
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="muted" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   Text="Dashed lines: campaign targets. Red line: master deadline."/>
+                        <Button Grid.Column="1" Classes="ghost" Content="Open in window ⧉" Padding="10,4"
+                                Command="{Binding OpenTestPointsWindowCommand}"/>
+                    </Grid>
+                    <ScrollViewer x:Name="TpScroll" HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled" MaxHeight="400"
+                                  b:MiddleButtonPan.Enabled="True">
+                        <LayoutTransformControl x:Name="TpScaler">
+                            <views:TestPointsChartControl Data="{Binding TestPointsGantt}"
+                                                          HideEmptyDays="{Binding HideNonFlyableDays}"/>
+                        </LayoutTransformControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Expander>
+
+            <Expander Classes="panel" IsExpanded="True" IsVisible="{Binding HasResult}">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Schedule"/>
+                </Expander.Header>
+                <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="92,78,1.3*,56,96,1.3*,1.3*,92" Margin="4,0">
+                        <TextBlock Grid.Column="0" Classes="label" Text="Date"/>
+                        <TextBlock Grid.Column="1" Classes="label" Text="Block"/>
+                        <TextBlock Grid.Column="2" Classes="label" Text="Campaign"/>
+                        <TextBlock Grid.Column="3" Classes="label" Text="Sortie"/>
+                        <TextBlock Grid.Column="4" Classes="label" Text="Aircraft"/>
+                        <TextBlock Grid.Column="5" Classes="label" Text="Pilot"/>
+                        <TextBlock Grid.Column="6" Classes="label" Text="FTEs"/>
+                        <TextBlock Grid.Column="7" Classes="label" Text="Rehearsal"/>
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Sorties}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ScheduleRow">
+                                <Border Classes="row">
+                                    <Grid ColumnDefinitions="92,78,1.3*,56,96,1.3*,1.3*,92">
+                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}'}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Block}" Classes="muted"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Campaign}" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding SortieNo}"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding Aircraft}" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding Pilot}" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="6" Text="{Binding Engineers}" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="7" Classes="muted"
+                                                   Text="{Binding RehearsalDate, StringFormat='{}{0:yyyy-MM-dd}'}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

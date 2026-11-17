@@ -1,0 +1,451 @@
+{
+  "name": "MOIRAI Demo Program 2026",
+  "scenarios": [
+    {
+      "id": "5745d05b9b5543a0801b6a0e356500e9",
+      "name": "Baseline",
+      "createdAt": "09:00",
+      "pilots": [
+        {
+          "id": "TP-CK",
+          "name": "Cenk Kaya",
+          "shortName": "CK",
+          "qualifications": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "TP-MA",
+          "name": "Murat Ayd\u0131n",
+          "shortName": "MA",
+          "qualifications": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "TP-SD",
+          "name": "Selin Demir",
+          "shortName": "SD",
+          "qualifications": [],
+          "leaveWindows": [
+            {
+              "id": "41b0508a2d984ea0b4d64dcf94c87679",
+              "start": "2026-09-07",
+              "end": "2026-09-13",
+              "note": "annual leave",
+              "days": 7
+            }
+          ]
+        },
+        {
+          "id": "TP-BT",
+          "name": "Baran Tek",
+          "shortName": "BT",
+          "qualifications": [],
+          "leaveWindows": []
+        }
+      ],
+      "engineers": [
+        {
+          "id": "FTE-1",
+          "name": "Aylin Ko\u00E7",
+          "shortName": "E1",
+          "qualifications": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "FTE-2",
+          "name": "Deniz Acar",
+          "shortName": "E2",
+          "qualifications": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "FTE-3",
+          "name": "Emre S\u00F6nmez",
+          "shortName": "E3",
+          "qualifications": [],
+          "leaveWindows": [
+            {
+              "id": "3e92f8203fb048518cd049c636cdb340",
+              "start": "2026-08-17",
+              "end": "2026-08-21",
+              "note": "training",
+              "days": 5
+            }
+          ]
+        },
+        {
+          "id": "FTE-4",
+          "name": "G\u00FCl Yaman",
+          "shortName": "E4",
+          "qualifications": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "FTE-5",
+          "name": "Kerem Us",
+          "shortName": "E5",
+          "qualifications": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "FTE-6",
+          "name": "Lale Erden",
+          "shortName": "E6",
+          "qualifications": [],
+          "leaveWindows": []
+        }
+      ],
+      "aircraft": [
+        {
+          "id": "TC-001",
+          "name": "Prototype 1",
+          "maintenanceWindows": [],
+          "periodicMaintenances": [
+            {
+              "intervalFlightHours": 50,
+              "durationDays": 2
+            }
+          ]
+        },
+        {
+          "id": "TC-002",
+          "name": "Prototype 2",
+          "maintenanceWindows": [
+            {
+              "id": "387f3d9eca084bb89b671a1808f12937",
+              "start": "2026-08-10",
+              "end": "2026-08-20",
+              "note": "200h periodic",
+              "days": 11
+            }
+          ],
+          "periodicMaintenances": [
+            {
+              "intervalFlightHours": 50,
+              "durationDays": 2
+            }
+          ]
+        },
+        {
+          "id": "TC-003",
+          "name": "Flutter Jet",
+          "maintenanceWindows": [],
+          "periodicMaintenances": [
+            {
+              "intervalFlightHours": 40,
+              "durationDays": 3
+            }
+          ]
+        },
+        {
+          "id": "CH-01",
+          "name": "Chase F-16",
+          "maintenanceWindows": [],
+          "periodicMaintenances": []
+        }
+      ],
+      "campaigns": [
+        {
+          "id": "FT-PERF",
+          "name": "FT-PERF Performance \u0026 FQ",
+          "totalTestPoints": 40,
+          "testPointsPerSortie": 4,
+          "startDate": "2026-07-01",
+          "targetEndDate": "2026-08-10",
+          "compatibleAircraftIds": [
+            "TC-001",
+            "TC-002"
+          ],
+          "locationId": "",
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "TP-CK",
+            "TP-MA"
+          ],
+          "assignedEngineerIds": [
+            "FTE-1",
+            "FTE-2",
+            "FTE-3"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1,
+          "allowedBlocks": [],
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 5,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.15,
+          "retestProbabilityFloor": 0.05,
+          "retestLearningScale": 15,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0.03
+        },
+        {
+          "id": "FT-FLUT",
+          "name": "FT-FLUT Flutter Envelope",
+          "totalTestPoints": 16,
+          "testPointsPerSortie": 2,
+          "startDate": "2026-07-15",
+          "targetEndDate": "2026-08-15",
+          "compatibleAircraftIds": [
+            "TC-003"
+          ],
+          "locationId": "",
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": true,
+          "assignedPilotIds": [
+            "TP-SD",
+            "TP-BT"
+          ],
+          "assignedEngineerIds": [
+            "FTE-4",
+            "FTE-5"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3,
+          "allowedBlocks": [],
+          "expectedSortieFlightHours": 1.5,
+          "expectedSortieDutyHours": 5,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.35,
+          "retestProbabilityFloor": 0.1,
+          "retestLearningScale": 12,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0.1
+        },
+        {
+          "id": "FT-ENV",
+          "name": "FT-ENV Avionics \u0026 Systems",
+          "totalTestPoints": 36,
+          "testPointsPerSortie": 3,
+          "startDate": "2026-07-01",
+          "targetEndDate": "2026-09-15",
+          "compatibleAircraftIds": [
+            "TC-001",
+            "TC-002"
+          ],
+          "locationId": "",
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "TP-CK",
+            "TP-MA",
+            "TP-BT"
+          ],
+          "assignedEngineerIds": [
+            "FTE-1",
+            "FTE-2",
+            "FTE-6"
+          ],
+          "prerequisiteCampaignIds": [
+            "FT-PERF"
+          ],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1,
+          "allowedBlocks": [],
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 5,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.2,
+          "retestProbabilityFloor": 0.05,
+          "retestLearningScale": 20,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0.05
+        },
+        {
+          "id": "FT-WPN",
+          "name": "FT-WPN Stores Separation @ Konya",
+          "totalTestPoints": 14,
+          "testPointsPerSortie": 2,
+          "startDate": "2026-08-15",
+          "targetEndDate": "2026-09-04",
+          "compatibleAircraftIds": [
+            "TC-002"
+          ],
+          "locationId": "rng-konya",
+          "supportAircraftPerSortie": 1,
+          "supportAircraftIds": [
+            "CH-01"
+          ],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "TP-MA",
+            "TP-BT"
+          ],
+          "assignedEngineerIds": [
+            "FTE-3",
+            "FTE-4"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1,
+          "allowedBlocks": [
+            1,
+            2
+          ],
+          "expectedSortieFlightHours": 1.5,
+          "expectedSortieDutyHours": 6,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0.3,
+          "retestProbabilityFloor": 0.05,
+          "retestLearningScale": 10,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0.15
+        },
+        {
+          "id": "FT-LOAD",
+          "name": "FT-LOAD Loads \u0026 HQ",
+          "totalTestPoints": 24,
+          "testPointsPerSortie": 4,
+          "startDate": "2026-08-01",
+          "targetEndDate": "9999-12-31",
+          "compatibleAircraftIds": [
+            "TC-001",
+            "TC-002",
+            "TC-003"
+          ],
+          "locationId": "",
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "TP-CK",
+            "TP-SD"
+          ],
+          "assignedEngineerIds": [
+            "FTE-5",
+            "FTE-6"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1,
+          "allowedBlocks": [],
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 5,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0,
+          "retestProbabilityFloor": 0,
+          "retestLearningScale": 0,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0
+        }
+      ],
+      "locations": [
+        {
+          "id": "rng-konya",
+          "name": "Konya Test Range",
+          "blocksPerDayCap": 2,
+          "hasSimulator": false,
+          "ferryDays": 1,
+          "ferryFlightHours": 2,
+          "ferryDutyHours": 6,
+          "setupDays": 2,
+          "teardownDays": 1,
+          "rangeModel": {
+            "$type": "probabilistic",
+            "monthlyRates": [
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65,
+              0.65
+            ],
+            "persistence": 0.4,
+            "patternLength": 10,
+            "anchor": "2026-07-01"
+          }
+        }
+      ],
+      "config": {
+        "blocksPerDay": 3,
+        "maxSortiesPerPersonPerDay": 6,
+        "maxRehearsalsPerPersonPerDay": 2,
+        "engineersPerSortie": 2,
+        "pilotsPerSortie": 1,
+        "maxRehearsalGapDays": 2,
+        "rehearsalOnWorkdaysOnly": true,
+        "maxFlightHoursPerDay": 6,
+        "maxFlightHoursPer7Days": 30,
+        "maxFlightHoursPer28Days": 100,
+        "maxFlightHoursPerYear": 900,
+        "maxDutyHoursPerDay": 12,
+        "maxDutyHoursPer7Days": 60,
+        "maxDutyHoursPer14Days": 110,
+        "maxDutyHoursPer28Days": 190,
+        "maxFlightDutyHoursPerDay": "Infinity",
+        "minRestHours": 12,
+        "maxConsecutiveFlyingDays": 6,
+        "loadBalanceWindowDays": 7,
+        "simulateYieldInNominal": false,
+        "overrideSortieAbort": false,
+        "sortieAbortOverride": 0.05
+      },
+      "calendar": {
+        "holidays": [
+          "2026-07-15",
+          "2026-08-30",
+          "2026-10-29"
+        ],
+        "weekendDays": [
+          6,
+          0
+        ],
+        "extraWorkdays": []
+      },
+      "flyableModel": {
+        "$type": "probabilistic",
+        "monthlyRates": [
+          0.45,
+          0.5,
+          0.55,
+          0.6,
+          0.7,
+          0.8,
+          0.85,
+          0.85,
+          0.75,
+          0.6,
+          0.5,
+          0.45
+        ],
+        "persistence": 0.5,
+        "patternLength": 7,
+        "anchor": "2026-07-01"
+      },
+      "horizonStart": "2026-07-01",
+      "horizonEnd": "2026-12-15",
+      "masterDeadline": "2026-09-08",
+      "scopeCampaignIds": [],
+      "status": "Not run yet",
+      "isSelected": false
+    }
+  ],
+  "activeScenarioId": "5745d05b9b5543a0801b6a0e356500e9"
+}

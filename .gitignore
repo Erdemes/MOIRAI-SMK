@@ -1,0 +1,13 @@
+bin/
+obj/
+
+.idea/
+.vs/
+*.user
+*.suo
+*.DotSettings.user
+
+**/moirai.json
+sample-schedule.xlsx
+
+MOIRAI-*-portable-*.zip

@@ -1,0 +1,130 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        x:Class="MOIRAI.Views.ExecutionDialog"
+        x:DataType="vm:ExecutionViewModel"
+        Title="Record actuals"
+        Width="1480" Height="680"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="24">
+
+        <StackPanel Grid.Row="0" Spacing="6">
+            <TextBlock Classes="h2" Text="Record executions"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,14,0,10">
+            <TextBlock Classes="label" Text="As-of date (inclusive)" VerticalAlignment="Center"/>
+            <CalendarDatePicker SelectedDate="{Binding AsOfDate}" Width="160"/>
+            <TextBlock Classes="muted" Text="{Binding Summary}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" Classes="card" Padding="10">
+            <Grid RowDefinitions="Auto,*">
+                <Grid Grid.Row="0" ColumnDefinitions="84,1.2*,32,200,140,140,52,116,134,104" Margin="4,0,4,6">
+                    <TextBlock Grid.Column="0" Classes="label" Text="Plan date"/>
+                    <TextBlock Grid.Column="1" Classes="label" Text="Campaign"/>
+                    <TextBlock Grid.Column="2" Classes="label" Text="#"/>
+                    <TextBlock Grid.Column="3" Classes="label" Text="Aircraft / sim"/>
+                    <TextBlock Grid.Column="4" Classes="label" Text="Pilots"/>
+                    <TextBlock Grid.Column="5" Classes="label" Text="FTEs"/>
+                    <TextBlock Grid.Column="6" Classes="label" Text="Plan TP"/>
+                    <TextBlock Grid.Column="7" Classes="label" Text="Status"/>
+                    <TextBlock Grid.Column="8" Classes="label" Text="Actual date"/>
+                    <TextBlock Grid.Column="9" Classes="label" Text="Actual TP"/>
+                </Grid>
+                <ScrollViewer Grid.Row="1" x:Name="RowScroll" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Rows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ExecutionRow">
+                                <Border Classes="row" BorderBrush="{Binding RowBorder}" BorderThickness="1.5">
+                                    <Grid ColumnDefinitions="84,1.2*,32,200,140,140,52,116,134,104">
+                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}'}"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding CampaignName}" TextWrapping="Wrap"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding SortieNo}" VerticalAlignment="Center"/>
+
+                                        <ComboBox Grid.Column="3" ItemsSource="{Binding AircraftChoices}"
+                                                  SelectedItem="{Binding SelectedAircraft}"
+                                                  HorizontalAlignment="Stretch" Margin="0,0,6,0" VerticalAlignment="Center">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:IdLabel">
+                                                    <TextBlock Text="{Binding Label}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+
+                                        <Button Grid.Column="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                                Margin="0,0,6,0" Padding="8,4" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding PilotsSummary}" TextTrimming="CharacterEllipsis"/>
+                                            <Button.Flyout>
+                                                <Flyout>
+                                                    <ScrollViewer MaxHeight="260">
+                                                        <ItemsControl ItemsSource="{Binding PilotChoices}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="vm:SelectableOption">
+                                                                    <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" Margin="2"/>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </ScrollViewer>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+
+                                        <Button Grid.Column="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                                Margin="0,0,6,0" Padding="8,4" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding EngineersSummary}" TextTrimming="CharacterEllipsis"/>
+                                            <Button.Flyout>
+                                                <Flyout>
+                                                    <ScrollViewer MaxHeight="260">
+                                                        <ItemsControl ItemsSource="{Binding EngineerChoices}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="vm:SelectableOption">
+                                                                    <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" Margin="2"/>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </ScrollViewer>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+
+                                        <TextBlock Grid.Column="6" Text="{Binding PlannedTp, StringFormat='{}{0:0.##}'}"
+                                                   Classes="muted" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="7" SelectedIndex="{Binding StatusIndex}"
+                                                  Width="110" VerticalAlignment="Center">
+                                            <ComboBoxItem Content="✓ Flown"/>
+                                            <ComboBoxItem Content="✕ Aborted"/>
+                                            <ComboBoxItem Content="- Cancelled"/>
+                                        </ComboBox>
+                                        <CalendarDatePicker Grid.Column="8" SelectedDate="{Binding ActualDate}"
+                                                            Width="128" VerticalAlignment="Center"
+                                                            IsEnabled="{Binding IsDateEnabled}"/>
+                                        <NumericUpDown Grid.Column="9" Value="{Binding ActualTp}"
+                                                       Minimum="0" Increment="1" FormatString="0"
+                                                       HorizontalAlignment="Stretch" Margin="0,0,2,0"
+                                                       IsEnabled="{Binding IsTpEnabled}"
+                                                       VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,14,0,0">
+            <TextBlock x:Name="ErrorText" TextWrapping="Wrap" IsVisible="False"
+                       Foreground="{DynamicResource Danger}" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                <Button Classes="ghost" Content="Cancel" Click="OnCancel"/>
+                <Button Content="Apply &amp; replan" Click="OnApply" IsDefault="True" MinWidth="150"
+                        Background="{DynamicResource Accent}" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

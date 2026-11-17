@@ -1,0 +1,229 @@
+{
+  "name": "Tightness order demo",
+  "scenarios": [
+    {
+      "id": "tightness-demo",
+      "name": "Tightness order demo",
+      "createdAt": "00:00",
+      "pilots": [
+        {
+          "id": "FL",
+          "name": "Flutter Lead",
+          "shortName": "FL",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": [
+            {
+              "id": "c364d0a483bb4f64916c24a4db786c4c",
+              "start": "2026-06-05",
+              "end": "2026-06-21",
+              "note": "course",
+              "days": 17
+            }
+          ]
+        },
+        {
+          "id": "RP",
+          "name": "Routine Pilot",
+          "shortName": "RP",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        }
+      ],
+      "engineers": [
+        {
+          "id": "FE",
+          "name": "Flutter FTE",
+          "shortName": "FE",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "RE",
+          "name": "Routine FTE",
+          "shortName": "RE",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        }
+      ],
+      "aircraft": [
+        {
+          "id": "TC-01",
+          "name": "TC-01",
+          "minPilots": 1,
+          "maintenanceWindows": [],
+          "periodicMaintenances": [],
+          "failuresPer100FlightHours": 0,
+          "repairDaysMin": 1,
+          "repairDaysMax": 3
+        }
+      ],
+      "campaigns": [
+        {
+          "id": "FLUTTER",
+          "name": "Flutter clearance",
+          "groupId": "",
+          "totalTestPoints": 3,
+          "testPointsPerSortie": 1,
+          "startDate": "2026-06-01",
+          "targetEndDate": "2026-06-21",
+          "compatibleAircraftIds": [
+            "TC-01"
+          ],
+          "locationId": "",
+          "venue": 0,
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "FL"
+          ],
+          "assignedEngineerIds": [
+            "FE"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3,
+          "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0,
+          "maxSortiesPerDay": 0,
+          "postCompletionReviewWorkdays": 0,
+          "requiredExternalSupportIds": [],
+          "restDaysAfterCompletion": 0,
+          "useGlobalCalendar": true,
+          "weekendDays": [
+            6,
+            0
+          ],
+          "workOnHolidays": false,
+          "useGlobalFlyable": true,
+          "useGlobalLimits": true,
+          "compatibleSimulatorIds": [],
+          "rehearsalRequired": false,
+          "pilotsPerSortie": 0,
+          "engineersPerSortie": 1,
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 4,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0,
+          "retestProbabilityFloor": 0,
+          "retestLearningScale": 0,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0
+        },
+        {
+          "id": "ROUTINE",
+          "name": "Routine handling",
+          "groupId": "",
+          "totalTestPoints": 3,
+          "testPointsPerSortie": 1,
+          "startDate": "2026-06-01",
+          "targetEndDate": "2026-06-11",
+          "compatibleAircraftIds": [
+            "TC-01"
+          ],
+          "locationId": "",
+          "venue": 0,
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "RP"
+          ],
+          "assignedEngineerIds": [
+            "RE"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3,
+          "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0,
+          "maxSortiesPerDay": 0,
+          "postCompletionReviewWorkdays": 0,
+          "requiredExternalSupportIds": [],
+          "restDaysAfterCompletion": 0,
+          "useGlobalCalendar": true,
+          "weekendDays": [
+            6,
+            0
+          ],
+          "workOnHolidays": false,
+          "useGlobalFlyable": true,
+          "useGlobalLimits": true,
+          "compatibleSimulatorIds": [],
+          "rehearsalRequired": false,
+          "pilotsPerSortie": 0,
+          "engineersPerSortie": 1,
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 4,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0,
+          "retestProbabilityFloor": 0,
+          "retestLearningScale": 0,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0
+        }
+      ],
+      "campaignGroups": [],
+      "locations": [],
+      "simulators": [],
+      "externalSupports": [],
+      "config": {
+        "blocksPerDay": 3,
+        "maxSortiesPerPersonPerDay": 6,
+        "maxRehearsalsPerPersonPerDay": 1,
+        "engineersPerSortie": 2,
+        "pilotsPerSortie": 1,
+        "maxRehearsalGapDays": 2,
+        "rehearsalOnWorkdaysOnly": true,
+        "maxFlightHoursPerDay": 6,
+        "maxFlightHoursPer7Days": 30,
+        "maxFlightHoursPer28Days": 100,
+        "maxFlightHoursPerYear": 900,
+        "maxDutyHoursPerDay": 12,
+        "maxDutyHoursPer7Days": 60,
+        "maxDutyHoursPer14Days": 110,
+        "maxDutyHoursPer28Days": 190,
+        "maxFlightDutyHoursPerDay": "Infinity",
+        "minRestHours": 12,
+        "maxConsecutiveFlyingDays": 6,
+        "loadBalanceWindowDays": 7,
+        "simulateYieldInNominal": false,
+        "overrideSortieAbort": false,
+        "sortieAbortOverride": 0.05,
+        "useRevisingEngine": true,
+        "mcUseAdvancedEngine": false
+      },
+      "calendar": {
+        "holidays": [],
+        "weekendDays": [],
+        "extraWorkdays": []
+      },
+      "flyableModel": {
+        "$type": "rate",
+        "rate": 1,
+        "patternLength": 1,
+        "anchor": "2026-06-01"
+      },
+      "horizonStart": "2026-06-01",
+      "horizonEnd": "2026-06-25",
+      "actualSorties": [],
+      "actualRehearsals": [],
+      "actualSimulatorSorties": [],
+      "sortiePins": [],
+      "scopeCampaignIds": [],
+      "status": "Not run yet",
+      "isSelected": false
+    }
+  ],
+  "activeScenarioId": "tightness-demo"
+}

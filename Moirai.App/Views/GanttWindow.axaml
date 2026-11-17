@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        xmlns:views="using:MOIRAI.Views"
+        xmlns:b="using:MOIRAI.Views.Behaviors"
+        x:Class="MOIRAI.Views.GanttWindow"
+        x:DataType="vm:PlanViewModel"
+        Title="Schedule (Gantt)"
+        Width="1400" Height="800" WindowState="Maximized"
+        Background="{DynamicResource AppBg}">
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="{DynamicResource SidebarBg}"
+                BorderBrush="{DynamicResource BorderSoft}" BorderThickness="0,0,0,1"
+                Padding="14,6">
+            <Grid ColumnDefinitions="*,16,Auto,16,Auto,10,Auto">
+                <ItemsControl Grid.Column="0" ItemsSource="{Binding LegendItems}"
+                              VerticalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:GanttLegendItem">
+                            <StackPanel Orientation="Horizontal" Spacing="5"
+                                        Margin="0,2,14,2" VerticalAlignment="Center">
+                                <Border Width="12" Height="12" CornerRadius="2"
+                                        Background="{Binding Swatch}"
+                                        BorderBrush="{DynamicResource BorderSoft}"
+                                        BorderThickness="1" VerticalAlignment="Center"/>
+                                <TextBlock Classes="muted" Text="{Binding Label}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                    <CheckBox Content="Mark idle days" IsChecked="{Binding ShowIdleMarkers}"
+                              VerticalAlignment="Center"/>
+                    <CheckBox Content="Hide non-flyable days"
+                              IsChecked="{Binding HideNonFlyableDays}" VerticalAlignment="Center"/>
+                </StackPanel>
+                <TextBlock Grid.Column="4" Classes="muted" Text="Zoom" VerticalAlignment="Center"/>
+                <Slider Grid.Column="6" x:Name="Zoom" Minimum="1" Maximum="3" Value="1.6" Width="220"
+                        VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                      b:MiddleButtonPan.Enabled="True">
+            <LayoutTransformControl x:Name="Scaler">
+                <views:GanttControl x:Name="Chart" Data="{Binding Gantt}"
+                                    HideEmptyDays="{Binding HideNonFlyableDays}"
+                                    ShowIdleMarkers="{Binding ShowIdleMarkers}" Margin="16"/>
+            </LayoutTransformControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

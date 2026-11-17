@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MOIRAI.ViewModels"
+             xmlns:views="using:MOIRAI.Views"
+             xmlns:b="using:MOIRAI.Views.Behaviors"
+             x:Class="MOIRAI.Views.AnimationView"
+             x:DataType="vm:AnimationViewModel">
+
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*,Auto,Auto" Margin="0,0,0,14">
+            <TextBlock Grid.Column="0" Classes="h1" Text="Animation"/>
+            <TextBlock Grid.Column="1" Classes="h1" Foreground="{DynamicResource TextMuted}"
+                       Text="- Operations playback" Margin="10,0,0,0"/>
+
+            <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" Margin="0,0,16,0"
+                        VerticalAlignment="Center" IsVisible="{Binding ShowRunSelector}">
+                <TextBlock Text="Run" Classes="muted" VerticalAlignment="Center"/>
+                <ComboBox MinWidth="180" ItemsSource="{Binding RunOptions}"
+                          SelectedItem="{Binding SelectedRun}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:RunOption">
+                            <TextBlock Text="{Binding Label}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <TextBlock Grid.Column="4" Text="{Binding ClockText}" HorizontalAlignment="Right"
+                       VerticalAlignment="Center" FontSize="15" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}"/>
+        </Grid>
+
+        <Grid Grid.Row="1" RowDefinitions="*,Auto">
+            <Border Grid.Row="0" CornerRadius="4" ClipToBounds="True"
+                    BorderBrush="{DynamicResource BorderSoft}" BorderThickness="1">
+                <Panel>
+                    <views:MapAnimationControl Data="{Binding Data}"
+                                               CurrentBlock="{Binding CurrentBlock}"
+                                               IsVisible="{Binding HasRun}"/>
+                    <TextBlock Text="{Binding Hint}" IsVisible="{Binding NoRun}"
+                               TextWrapping="Wrap" MaxWidth="460" TextAlignment="Center"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextMuted}"/>
+                </Panel>
+            </Border>
+
+            <Border Grid.Row="1" CornerRadius="4" ClipToBounds="True" Margin="0,12,0,0"
+                    Padding="6" Background="{DynamicResource CardBg}"
+                    BorderBrush="{DynamicResource BorderSoft}" BorderThickness="1"
+                    IsVisible="{Binding HasRun}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                              MaxHeight="220" b:MiddleButtonPan.Enabled="True">
+                    <views:AnimationGanttControl Data="{Binding Data}"
+                                                 CurrentBlock="{Binding CurrentBlock}"/>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Classes="card" Margin="0,14,0,0" IsVisible="{Binding HasRun}">
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,16,*,16,Auto,Auto,16,Auto">
+                <Button Grid.Column="0" Classes="ghost" Content="⏮" Padding="10,6"
+                        Command="{Binding RestartCommand}"/>
+                <Button Grid.Column="1" Classes="ghost" Content="◀ Step" Padding="10,6" Margin="6,0,0,0"
+                        Command="{Binding StepBackCommand}"/>
+                <Button Grid.Column="2" Content="▶  Play" Padding="16,6" Margin="6,0,0,0"
+                        Background="{DynamicResource Accent}" Foreground="White"
+                        IsVisible="{Binding !IsPlaying}" Command="{Binding PlayPauseCommand}"/>
+                <Button Grid.Column="2" Content="⏸  Pause" Padding="16,6" Margin="6,0,0,0"
+                        Background="{DynamicResource Accent}" Foreground="White"
+                        IsVisible="{Binding IsPlaying}" Command="{Binding PlayPauseCommand}"/>
+                <Button Grid.Column="3" Classes="ghost" Content="Step ▶" Padding="10,6" Margin="6,0,0,0"
+                        Command="{Binding StepForwardCommand}"/>
+
+                <Slider Grid.Column="5" Minimum="0" Maximum="{Binding MaxBlock}"
+                        Value="{Binding CurrentBlock, Mode=TwoWay}" VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="7" Classes="muted" Text="Speed" VerticalAlignment="Center"/>
+                <Slider Grid.Column="8" Minimum="0.5" Maximum="12" Value="{Binding Speed}"
+                        Width="130" VerticalAlignment="Center" Margin="8,0,0,0" ToolTip.Tip="Blocks per second"/>
+
+                <CheckBox Grid.Column="10" Content="Loop" IsChecked="{Binding Loop}"
+                          VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

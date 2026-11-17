@@ -1,0 +1,248 @@
+{
+  "name": "Sample Test Campaign Plan",
+  "pilots": [
+    {
+      "id": "p1",
+      "name": "Ahmet Yilmaz",
+      "shortName": "AHM",
+      "qualifications": []
+    },
+    {
+      "id": "p2",
+      "name": "Mehmet Demir",
+      "shortName": "MEH",
+      "qualifications": []
+    },
+    {
+      "id": "p3",
+      "name": "Caner Aydin",
+      "shortName": "CAN",
+      "qualifications": []
+    },
+    {
+      "id": "p4",
+      "name": "Selin Kaya",
+      "shortName": "SEL",
+      "qualifications": []
+    },
+    {
+      "id": "p5",
+      "name": "Burak Sahin",
+      "shortName": "BUR",
+      "qualifications": []
+    }
+  ],
+  "engineers": [
+    {
+      "id": "e1",
+      "name": "Elif Ozturk",
+      "shortName": "ELF",
+      "qualifications": []
+    },
+    {
+      "id": "e2",
+      "name": "Deniz Arslan",
+      "shortName": "DEN",
+      "qualifications": []
+    },
+    {
+      "id": "e3",
+      "name": "Cem Yildiz",
+      "shortName": "CEM",
+      "qualifications": []
+    },
+    {
+      "id": "e4",
+      "name": "Zeynep Acar",
+      "shortName": "ZEY",
+      "qualifications": []
+    },
+    {
+      "id": "e5",
+      "name": "Okan Polat",
+      "shortName": "OKA",
+      "qualifications": []
+    },
+    {
+      "id": "e6",
+      "name": "Naz Celik",
+      "shortName": "NAZ",
+      "qualifications": []
+    }
+  ],
+  "aircraft": [
+    {
+      "id": "TC-001",
+      "name": "F-16C"
+    },
+    {
+      "id": "TC-002",
+      "name": "F-16D"
+    },
+    {
+      "id": "TC-003",
+      "name": "Hurjet"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "c1",
+      "name": "Avionics Update",
+      "totalTestPoints": 30,
+      "testPointsPerSortie": 5,
+      "startDate": "2026-06-02",
+      "targetEndDate": "2026-06-30",
+      "compatibleAircraftIds": [
+        "TC-001",
+        "TC-002"
+      ],
+      "preferSingleAircraft": false,
+      "assignedPilotIds": [
+        "p1",
+        "p2"
+      ],
+      "assignedEngineerIds": [
+        "e1",
+        "e2",
+        "e3"
+      ],
+      "expectedSortieFlightHours": 2,
+      "expectedSortieDutyHours": 5,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    },
+    {
+      "id": "c2",
+      "name": "Envelope Expansion",
+      "totalTestPoints": 24,
+      "testPointsPerSortie": 4,
+      "startDate": "2026-06-02",
+      "targetEndDate": "2026-07-15",
+      "compatibleAircraftIds": [
+        "TC-001"
+      ],
+      "preferSingleAircraft": true,
+      "assignedPilotIds": [
+        "p1",
+        "p3"
+      ],
+      "assignedEngineerIds": [
+        "e1",
+        "e4"
+      ],
+      "expectedSortieFlightHours": 2,
+      "expectedSortieDutyHours": 6,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    },
+    {
+      "id": "c3",
+      "name": "Weapons Integration",
+      "totalTestPoints": 18,
+      "testPointsPerSortie": 3,
+      "startDate": "2026-06-09",
+      "targetEndDate": "2026-07-31",
+      "compatibleAircraftIds": [
+        "TC-002",
+        "TC-003"
+      ],
+      "preferSingleAircraft": false,
+      "assignedPilotIds": [
+        "p4",
+        "p5"
+      ],
+      "assignedEngineerIds": [
+        "e3",
+        "e5"
+      ],
+      "expectedSortieFlightHours": 1.5,
+      "expectedSortieDutyHours": 4,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    },
+    {
+      "id": "c4",
+      "name": "Flutter Test",
+      "totalTestPoints": 12,
+      "testPointsPerSortie": 3,
+      "startDate": "2026-06-15",
+      "targetEndDate": "2026-07-10",
+      "compatibleAircraftIds": [
+        "TC-003"
+      ],
+      "preferSingleAircraft": false,
+      "assignedPilotIds": [
+        "p5"
+      ],
+      "assignedEngineerIds": [
+        "e5",
+        "e6"
+      ],
+      "expectedSortieFlightHours": 1,
+      "expectedSortieDutyHours": 4,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    },
+    {
+      "id": "c5",
+      "name": "EW Trials",
+      "totalTestPoints": 20,
+      "testPointsPerSortie": 4,
+      "startDate": "2026-06-20",
+      "targetEndDate": "2026-08-15",
+      "compatibleAircraftIds": [
+        "TC-002"
+      ],
+      "preferSingleAircraft": false,
+      "assignedPilotIds": [
+        "p2",
+        "p4"
+      ],
+      "assignedEngineerIds": [
+        "e2",
+        "e6"
+      ],
+      "expectedSortieFlightHours": 2,
+      "expectedSortieDutyHours": 5,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    }
+  ],
+  "config": {
+    "maxSortiesPerPersonPerDay": 6,
+    "maxRehearsalsPerPersonPerDay": 1,
+    "engineersPerSortie": 2,
+    "pilotsPerSortie": 1,
+    "maxRehearsalGapDays": 2,
+    "rehearsalOnWorkdaysOnly": true,
+    "maxFlightHoursPerDay": 6,
+    "maxFlightHoursPer7Days": 30,
+    "maxFlightHoursPer28Days": 100,
+    "maxFlightHoursPerYear": 900,
+    "maxDutyHoursPerDay": 12,
+    "maxDutyHoursPer7Days": 60,
+    "maxDutyHoursPer14Days": 110,
+    "maxDutyHoursPer28Days": 190,
+    "maxFlightDutyHoursPerDay": "Infinity",
+    "minRestHours": 12,
+    "maxConsecutiveFlyingDays": 6
+  },
+  "calendar": {
+    "holidays": [
+      "2026-07-15",
+      "2026-08-30"
+    ],
+    "weekendDays": [
+      6,
+      0
+    ]
+  },
+  "flyableModel": {
+    "$type": "rate",
+    "rate": 0.6,
+    "patternLength": 5,
+    "anchor": "2026-06-01"
+  },
+  "horizonStart": "2026-06-01",
+  "horizonEnd": "2026-08-31"
+}

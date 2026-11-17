@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#13315C"/>
+      <stop offset="1" stop-color="#0A1B33"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#D99A2B"/>
+      <stop offset="1" stop-color="#F6D77E"/>
+    </linearGradient>
+    <symbol id="mark" viewBox="0 0 220 220">
+      <!-- ucus yollari (test izleri), gozden yukari yelpaze -->
+      <g fill="none" stroke="currentColor" stroke-linecap="round">
+        <path d="M110,132 Q92,102 64,74"   stroke-width="2.3" opacity="0.5"/>
+        <path d="M110,130 Q110,94 110,56"  stroke-width="2.5" opacity="0.6"/>
+        <path d="M110,132 Q128,102 156,74" stroke-width="2.3" opacity="0.5"/>
+      </g>
+      <!-- test noktalari -->
+      <g fill="currentColor" opacity="0.7">
+        <circle cx="86" cy="96" r="2.3"/><circle cx="110" cy="92" r="2.3"/><circle cx="134" cy="96" r="2.3"/>
+      </g>
+      <!-- 3 ucak (supurme kanat ust gorunum), farkli yonlere -->
+      <g fill="currentColor">
+        <path transform="translate(62,68) rotate(-40) scale(0.78)"  d="M0,-20 L3.5,-7 L17,7 L14.5,11 L4,7.5 L5,17 L0,14 L-5,17 L-4,7.5 L-14.5,11 L-17,7 L-3.5,-7 Z"/>
+        <path transform="translate(110,52) rotate(0) scale(0.94)"   d="M0,-20 L3.5,-7 L17,7 L14.5,11 L4,7.5 L5,17 L0,14 L-5,17 L-4,7.5 L-14.5,11 L-17,7 L-3.5,-7 Z"/>
+        <path transform="translate(158,68) rotate(40) scale(0.78)"  d="M0,-20 L3.5,-7 L17,7 L14.5,11 L4,7.5 L5,17 L0,14 L-5,17 L-4,7.5 L-14.5,11 L-17,7 L-3.5,-7 Z"/>
+      </g>
+      <!-- goren goz = FPV marker: daire govde + yan kanatcik + ust dikme + goz bebegi -->
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.8">
+        <circle cx="110" cy="150" r="14"/>
+        <line x1="96"  y1="150" x2="76"  y2="150"/>
+        <line x1="124" y1="150" x2="144" y2="150"/>
+        <line x1="110" y1="136" x2="110" y2="125"/>
+      </g>
+      <circle cx="110" cy="150" r="4.6" fill="currentColor"/>
+    </symbol>
+  </defs>
+  <rect x="20" y="40" width="200" height="200" rx="48" fill="url(#navy)"/>
+  <rect x="20" y="40" width="200" height="200" rx="48" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.45"/>
+  <use href="#mark" x="30" y="50" width="180" height="180" color="#ECC24A"/>
+  <text x="264" y="158" font-size="98" font-weight="600" letter-spacing="10" fill="#13294B">MOIRAI</text>
+  <text x="270" y="204" font-size="22" font-weight="600" letter-spacing="7" fill="#C79A33">FATE OF FLIGHT TEST</text>
+</svg>

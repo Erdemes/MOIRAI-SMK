@@ -1,0 +1,18 @@
+{
+  "manifestPath": "latest-version.json",
+  "sources": [
+    {
+      "kind": "github",
+      "owner": "Erdemes",
+      "repo": "MOIRAI",
+      "ref": "main",
+      "token": ""
+    },
+    {
+      "kind": "gitlab",
+      "baseUrl": "https://git.tai.com.tr",
+      "projectId": "6108",
+      "token": ""
+    }
+  ]
+}

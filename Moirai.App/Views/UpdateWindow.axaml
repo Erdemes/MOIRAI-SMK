@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        x:Class="MOIRAI.Views.UpdateWindow"
+        x:DataType="vm:UpdateViewModel"
+        Title="Update available"
+        Width="560" Height="520"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="24">
+
+        <StackPanel Grid.Row="0" Spacing="4">
+            <TextBlock Classes="h2" Text="{Binding Header}"/>
+            <TextBlock Classes="muted" Text="{Binding SubHeader}" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,14,0,0" Padding="14">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="8">
+                    <TextBlock Classes="label" Text="What's new"/>
+                    <ItemsControl ItemsSource="{Binding Changelog}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Grid ColumnDefinitions="Auto,*" Margin="0,2">
+                                    <TextBlock Grid.Column="0" Text="•" Margin="0,0,8,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding}" TextWrapping="Wrap"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <StackPanel Grid.Row="2" Spacing="6" Margin="0,14,0,0">
+            <ProgressBar Minimum="0" Maximum="1" Value="{Binding Progress}"
+                         IsVisible="{Binding IsBusy}" Height="6"/>
+            <TextBlock Text="{Binding Status}" Classes="muted" IsVisible="{Binding IsBusy}" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" Margin="0,14,0,0">
+            <TextBlock Grid.Column="0" Classes="muted" VerticalAlignment="Center" TextWrapping="Wrap"
+                       Text="Installing the update restarts MOIRAI."/>
+            <Button Grid.Column="1" Classes="ghost" Content="Later" Margin="0,0,10,0"
+                    Command="{Binding LaterCommand}" IsEnabled="{Binding NotBusy}"/>
+            <Button Grid.Column="2" Content="Apply &amp; restart" IsDefault="True"
+                    Command="{Binding ApplyAndRestartCommand}" IsEnabled="{Binding NotBusy}"
+                    Background="{DynamicResource Accent}" Foreground="White" Padding="14,8"/>
+        </Grid>
+    </Grid>
+</Window>

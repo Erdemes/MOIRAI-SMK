@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MOIRAI.ViewModels"
+             x:Class="MOIRAI.Views.OptimizationView"
+             x:DataType="vm:OptimizationViewModel">
+
+    <Grid Margin="20" RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,18">
+            <TextBlock Classes="h1" Text="Optimize"/>
+
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="14">
+
+                <Border Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="h2" Text="Plan optimization"/>
+                        <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding ModelHint}"/>
+
+                        <WrapPanel>
+                            <CheckBox Content="Reorder campaigns" IsChecked="{Binding LeverOrdering}" Margin="0,0,18,4"/>
+                            <CheckBox Content="Shift planned maintenance" IsChecked="{Binding LeverMaintenance}" Margin="0,0,18,4"/>
+                            <CheckBox Content="Shift crew leave" IsChecked="{Binding LeverLeave}" Margin="0,0,18,4"/>
+                            <CheckBox Content="Widen crew pools" IsChecked="{Binding LeverCrew}" Margin="0,0,18,4" ToolTip.Tip="Uses existing crew; adds no resources."/>
+                            <CheckBox Content="Stagger campaign starts" IsChecked="{Binding LeverStartDates}" Margin="0,0,18,4"/>
+                            <CheckBox Content="Authorize extra workdays" IsChecked="{Binding LeverExtraWorkdays}" Margin="0,0,18,4" ToolTip.Tip="Allows work on selected weekends and holidays."/>
+                            <CheckBox Content="Add pilots" IsChecked="{Binding LeverAddPilots}" Margin="0,0,18,4" ToolTip.Tip="Each addition incurs a confidence cost."/>
+                            <CheckBox Content="Add FTEs" IsChecked="{Binding LeverAddEngineers}" Margin="0,0,18,4" ToolTip.Tip="Each addition incurs a confidence cost."/>
+                            <CheckBox Content="Add aircraft" IsChecked="{Binding LeverAddAircraft}" Margin="0,0,18,4" ToolTip.Tip="Each addition incurs a confidence cost."/>
+                            <CheckBox Content="Add simulators" IsChecked="{Binding LeverAddSimulators}" Margin="0,0,18,4" ToolTip.Tip="Adds main-base capacity. Each addition incurs a confidence cost."/>
+                        </WrapPanel>
+
+                        <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto,Auto">
+                            <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4" Margin="0,0,16,10" ToolTip.Tip="Simulated annealing is faster. Genetic search explores more plans at higher cost.">
+                                <TextBlock Classes="label" Text="Search method"/>
+                                <ComboBox ItemsSource="{Binding SearchMethodOptions}"
+                                          SelectedIndex="{Binding SearchMethodIndex}"
+                                          HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Spacing="4" Margin="0,0,16,10">
+                                <TextBlock Classes="label" Text="Max shift (days)"/>
+                                <NumericUpDown Value="{Binding MaxShiftDays}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="2" Spacing="4" Margin="0,0,16,10">
+                                <TextBlock Classes="label" Text="Max start delay (days)"/>
+                                <NumericUpDown Value="{Binding MaxStartDelayDays}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="3" Spacing="4" Margin="0,0,0,10">
+                                <TextBlock Classes="label" Text="Max extra workdays"/>
+                                <NumericUpDown Value="{Binding MaxExtraWorkdays}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Spacing="4" Margin="0,0,16,10">
+                                <TextBlock Classes="label" Text="Max added pilots"/>
+                                <NumericUpDown Value="{Binding MaxAddedPilots}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4" Margin="0,0,16,10">
+                                <TextBlock Classes="label" Text="Max added FTEs"/>
+                                <NumericUpDown Value="{Binding MaxAddedEngineers}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="2" Spacing="4" Margin="0,0,16,10">
+                                <TextBlock Classes="label" Text="Max added aircraft"/>
+                                <NumericUpDown Value="{Binding MaxAddedAircraft}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="3" Spacing="4" Margin="0,0,0,10" ToolTip.Tip="More iterations broaden the search and increase run time.">
+                                <TextBlock Classes="label" Text="Iterations"/>
+                                <NumericUpDown Value="{Binding Iterations}" Minimum="1" Increment="100" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4" Margin="0,0,16,10" ToolTip.Tip="More runs reduce scoring noise and increase search time.">
+                                <TextBlock Classes="label" Text="Search runs (N)"/>
+                                <NumericUpDown Value="{Binding SearchRuns}" Minimum="1" Increment="10" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4" Margin="0,0,16,10" ToolTip.Tip="Validates the result against the baseline. More runs increase run time.">
+                                <TextBlock Classes="label" Text="Final runs (N)"/>
+                                <NumericUpDown Value="{Binding FinalRuns}" Minimum="1" Increment="50" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="2" Spacing="4" Margin="0,0,16,10">
+                                <TextBlock Classes="label" Text="Max added simulators"/>
+                                <NumericUpDown Value="{Binding MaxAddedSimulators}" Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                        </Grid>
+                        <Button Content="Optimize" Command="{Binding RunCommand}"
+                                IsEnabled="{Binding CanStart}" Padding="22,8"
+                                HorizontalAlignment="Left"
+                                Background="{DynamicResource Accent}" Foreground="White"/>
+
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource Danger}"
+                                   IsVisible="{Binding HasError}" TextWrapping="Wrap"/>
+                        <TextBlock Classes="muted" Text="Searching…"
+                                   IsVisible="{Binding IsRunning}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card" IsVisible="{Binding HasResult}">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="h2" Text="Result"/>
+                        <TextBlock Text="{Binding Summary}" FontWeight="SemiBold"
+                                   Foreground="{Binding SummaryBrush}" TextWrapping="Wrap"/>
+
+                        <TextBlock Classes="muted" TextWrapping="Wrap"
+                                   Text="Selected changes are saved as a new scenario."/>
+                        <ItemsControl ItemsSource="{Binding Changes}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:OptimizerChangeRow">
+                                    <Border Classes="row">
+                                        <Grid ColumnDefinitions="Auto,120,*">
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}"
+                                                      VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <Border Grid.Column="1" CornerRadius="999" Padding="9,1" Margin="0,0,10,0"
+                                                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                    BorderThickness="1" BorderBrush="{DynamicResource Accent}">
+                                                <TextBlock Text="{Binding Kind}" FontSize="12" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource Accent}"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="{Binding Description}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Spacing="6" IsVisible="{Binding HasFrontier}">
+                            <TextBlock Classes="label" Text="Confidence by added resources" Margin="0,6,0,0"/>
+                            <Grid ColumnDefinitions="90,*,110,110" Margin="4,0">
+                                <TextBlock Grid.Column="0" Classes="label" Text="Additions"/>
+                                <TextBlock Grid.Column="1" Classes="label" Text="What"/>
+                                <TextBlock Grid.Column="2" Classes="label" Text="Score"/>
+                                <TextBlock Grid.Column="3" Classes="label" Text="P(delivery)"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Frontier}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:FrontierRow">
+                                        <Border Classes="row" Padding="12,6" Margin="0,0,0,4">
+                                            <Grid ColumnDefinitions="90,*,110,110">
+                                                <TextBlock Grid.Column="0" Text="{Binding Additions}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding What}" Classes="muted"
+                                                           VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Score}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding PDelivery}" FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <Button Content="Create scenario from selected" Classes="ghost" HorizontalAlignment="Left"
+                                Command="{Binding ApplyCommand}" IsEnabled="{Binding CanApply}"/>
+                        <TextBlock Text="{Binding AppliedMessage}" Foreground="{DynamicResource TextMuted}"
+                                   IsVisible="{Binding HasApplied}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

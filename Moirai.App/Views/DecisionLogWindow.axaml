@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        x:Class="MOIRAI.Views.DecisionLogWindow"
+        x:DataType="vm:DecisionLogViewModel"
+        Title="Decision log (DayLog)"
+        Width="1120" Height="760"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="{DynamicResource SidebarBg}"
+                BorderBrush="{DynamicResource BorderSoft}" BorderThickness="0,0,0,1"
+                Padding="14,8">
+            <StackPanel Spacing="8">
+                <TextBlock Classes="h2" Text="{Binding ScenarioName, StringFormat='Decision log · {0}'}"/>
+                <WrapPanel ItemSpacing="14" LineSpacing="6" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <TextBlock Classes="muted" Text="Campaign" VerticalAlignment="Center"/>
+                        <ComboBox MinWidth="180" ItemsSource="{Binding Campaigns}"
+                                  SelectedItem="{Binding SelectedCampaign}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <TextBlock Classes="muted" Text="Find" VerticalAlignment="Center"/>
+                        <TextBox Width="220" PlaceholderText="filter text…" Text="{Binding SearchText}"/>
+                    </StackPanel>
+                    <CheckBox Content="Placed" IsChecked="{Binding ShowPlaced}"/>
+                    <CheckBox Content="Blocked" IsChecked="{Binding ShowBlocked}"/>
+                    <CheckBox Content="Waiting" IsChecked="{Binding ShowWaiting}"/>
+                    <CheckBox Content="Repair" IsChecked="{Binding ShowRepair}"/>
+                    <CheckBox Content="Search" IsChecked="{Binding ShowSearch}"/>
+                    <CheckBox Content="Other" IsChecked="{Binding ShowOther}"/>
+                    <Button Classes="ghost" Content="Reset" Command="{Binding ResetFiltersCommand}"/>
+                </WrapPanel>
+                <TextBlock Classes="muted" Text="{Binding Summary}"/>
+            </StackPanel>
+        </Border>
+
+        <ListBox ItemsSource="{Binding Entries}" Background="Transparent"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:DecisionRow">
+                    <Border BorderBrush="{DynamicResource BorderSoft}" BorderThickness="0,0,0,1"
+                            Padding="4,6">
+                        <Grid ColumnDefinitions="84,110,150,*">
+                            <Border Grid.Column="0" Background="{Binding KindBrush}" CornerRadius="3"
+                                    Padding="6,2" Margin="0,0,10,0" VerticalAlignment="Top"
+                                    HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Kind}" Foreground="White"
+                                           FontSize="11" FontWeight="SemiBold"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Classes="muted" Text="{Binding DayText}"
+                                       VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Campaign}" FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Top"
+                                       Margin="0,0,10,0"/>
+                            <TextBlock Grid.Column="3" Text="{Binding Message}" TextWrapping="Wrap"
+                                       VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</Window>

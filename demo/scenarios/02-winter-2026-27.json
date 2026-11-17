@@ -1,0 +1,113 @@
+{
+  "name": "Winter Test Window 2026/27",
+  "pilots": [
+    { "id": "TP-CK", "name": "Cenk Kaya",   "shortName": "CK", "qualifications": ["Experimental TP", "FW"], "leaveWindows": [] },
+    { "id": "TP-MA", "name": "Murat Aydin", "shortName": "MA", "qualifications": ["Experimental TP", "FW"], "leaveWindows": [] },
+    { "id": "TP-SD", "name": "Selin Demir", "shortName": "SD", "qualifications": ["Experimental TP", "FW"], "leaveWindows": [] }
+  ],
+  "engineers": [
+    { "id": "E-AY", "name": "Ayse Yildiz",  "shortName": "AY", "qualifications": ["FTE"], "leaveWindows": [] },
+    { "id": "E-BK", "name": "Burak Koc",    "shortName": "BK", "qualifications": ["FTE"], "leaveWindows": [] },
+    { "id": "E-CT", "name": "Ceren Tas",    "shortName": "CT", "qualifications": ["FTE"], "leaveWindows": [] },
+    { "id": "E-DA", "name": "Deniz Arslan", "shortName": "DA", "qualifications": ["FTE"], "leaveWindows": [] }
+  ],
+  "aircraft": [
+    { "id": "TC-PT01", "name": "Prototype-01", "maintenanceWindows": [] },
+    { "id": "TC-PT02", "name": "Prototype-02", "maintenanceWindows": [] }
+  ],
+  "campaigns": [
+    {
+      "id": "FTC-COLD",
+      "name": "Cold-Weather Systems",
+      "totalTestPoints": 50,
+      "testPointsPerSortie": 5,
+      "startDate": "2026-11-02",
+      "targetEndDate": "2026-12-11",
+      "compatibleAircraftIds": ["TC-PT01", "TC-PT02"],
+      "preferSingleAircraft": true,
+      "assignedPilotIds": ["TP-CK", "TP-MA"],
+      "assignedEngineerIds": ["E-AY", "E-BK", "E-CT"],
+      "prerequisiteCampaignIds": [],
+      "blocksPerSortie": 1,
+      "allowedBlocks": [1],
+      "expectedSortieFlightHours": 1.2,
+      "expectedSortieDutyHours": 4,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    },
+    {
+      "id": "FTC-ICE",
+      "name": "Icing Trials",
+      "totalTestPoints": 30,
+      "testPointsPerSortie": 3,
+      "startDate": "2026-11-16",
+      "targetEndDate": "2026-12-31",
+      "compatibleAircraftIds": ["TC-PT01", "TC-PT02"],
+      "preferSingleAircraft": true,
+      "assignedPilotIds": ["TP-SD"],
+      "assignedEngineerIds": ["E-BK", "E-CT", "E-DA"],
+      "prerequisiteCampaignIds": [],
+      "blocksPerSortie": 1,
+      "allowedBlocks": [1],
+      "expectedSortieFlightHours": 1.4,
+      "expectedSortieDutyHours": 5,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    },
+    {
+      "id": "FTC-NAV",
+      "name": "Navigation & Nav-Aids",
+      "totalTestPoints": 32,
+      "testPointsPerSortie": 4,
+      "startDate": "2027-01-04",
+      "targetEndDate": "2027-02-20",
+      "compatibleAircraftIds": ["TC-PT01", "TC-PT02"],
+      "preferSingleAircraft": false,
+      "assignedPilotIds": ["TP-CK", "TP-MA"],
+      "assignedEngineerIds": ["E-AY", "E-BK", "E-CT"],
+      "prerequisiteCampaignIds": [],
+      "blocksPerSortie": 1,
+      "allowedBlocks": [],
+      "expectedSortieFlightHours": 1.0,
+      "expectedSortieDutyHours": 4,
+      "expectedSortieFlightDutyHours": 0,
+      "expectedRehearsalDutyHours": 2
+    }
+  ],
+  "config": {
+    "blocksPerDay": 3,
+    "maxSortiesPerPersonPerDay": 6,
+    "maxRehearsalsPerPersonPerDay": 1,
+    "engineersPerSortie": 2,
+    "pilotsPerSortie": 1,
+    "maxRehearsalGapDays": 2,
+    "rehearsalOnWorkdaysOnly": true,
+    "maxFlightHoursPerDay": 6,
+    "maxFlightHoursPer7Days": 30,
+    "maxFlightHoursPer28Days": 100,
+    "maxFlightHoursPerYear": 900,
+    "maxDutyHoursPerDay": 12,
+    "maxDutyHoursPer7Days": 60,
+    "maxDutyHoursPer14Days": 110,
+    "maxDutyHoursPer28Days": 190,
+    "maxFlightDutyHoursPerDay": "Infinity",
+    "minRestHours": 12,
+    "maxConsecutiveFlyingDays": 6,
+    "loadBalanceWindowDays": 7
+  },
+  "calendar": {
+    "holidays": [
+      "2027-01-01"
+    ],
+    "weekendDays": [6, 0]
+  },
+  "flyableModel": {
+    "$type": "probabilistic",
+    "monthlyRates": [0.40, 0.45, 0.58, 0.68, 0.78, 0.88, 0.92, 0.92, 0.85, 0.72, 0.42, 0.38],
+    "persistence": 0.65,
+    "patternLength": 10,
+    "anchor": "2026-11-02"
+  },
+  "horizonStart": "2026-11-01",
+  "horizonEnd": "2027-02-28"
+}

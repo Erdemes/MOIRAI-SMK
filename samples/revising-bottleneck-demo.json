@@ -1,0 +1,232 @@
+{
+  "name": "Bottleneck steering demo",
+  "scenarios": [
+    {
+      "id": "bottleneck-demo",
+      "name": "Bottleneck steering demo",
+      "createdAt": "00:00",
+      "pilots": [
+        {
+          "id": "PF",
+          "name": "Pilot F",
+          "shortName": "PF",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "PL",
+          "name": "Pilot L",
+          "shortName": "PL",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        }
+      ],
+      "engineers": [
+        {
+          "id": "EF",
+          "name": "FTE F",
+          "shortName": "EF",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        },
+        {
+          "id": "EL",
+          "name": "FTE L",
+          "shortName": "EL",
+          "qualifications": [],
+          "typeRatings": [],
+          "leaveWindows": []
+        }
+      ],
+      "aircraft": [
+        {
+          "id": "TC-SHARED",
+          "name": "TC-SHARED",
+          "minPilots": 1,
+          "maintenanceWindows": [],
+          "periodicMaintenances": [],
+          "failuresPer100FlightHours": 0,
+          "repairDaysMin": 1,
+          "repairDaysMax": 3
+        },
+        {
+          "id": "TC-SPARE",
+          "name": "TC-SPARE",
+          "minPilots": 1,
+          "maintenanceWindows": [],
+          "periodicMaintenances": [],
+          "failuresPer100FlightHours": 0,
+          "repairDaysMin": 1,
+          "repairDaysMax": 3
+        }
+      ],
+      "campaigns": [
+        {
+          "id": "FLEX",
+          "name": "Flexible campaign",
+          "groupId": "",
+          "totalTestPoints": 1,
+          "testPointsPerSortie": 1,
+          "startDate": "2026-06-01",
+          "targetEndDate": "2026-06-01",
+          "compatibleAircraftIds": [
+            "TC-SHARED",
+            "TC-SPARE"
+          ],
+          "locationId": "",
+          "venue": 0,
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "PF"
+          ],
+          "assignedEngineerIds": [
+            "EF"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3,
+          "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0,
+          "maxSortiesPerDay": 0,
+          "postCompletionReviewWorkdays": 0,
+          "requiredExternalSupportIds": [],
+          "restDaysAfterCompletion": 0,
+          "useGlobalCalendar": true,
+          "weekendDays": [
+            6,
+            0
+          ],
+          "workOnHolidays": false,
+          "useGlobalFlyable": true,
+          "useGlobalLimits": true,
+          "compatibleSimulatorIds": [],
+          "rehearsalRequired": false,
+          "pilotsPerSortie": 0,
+          "engineersPerSortie": 1,
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 4,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0,
+          "retestProbabilityFloor": 0,
+          "retestLearningScale": 0,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0
+        },
+        {
+          "id": "LOCKED",
+          "name": "Locked to the shared jet",
+          "groupId": "",
+          "totalTestPoints": 1,
+          "testPointsPerSortie": 1,
+          "startDate": "2026-06-01",
+          "targetEndDate": "2026-06-01",
+          "compatibleAircraftIds": [
+            "TC-SHARED"
+          ],
+          "locationId": "",
+          "venue": 0,
+          "supportAircraftPerSortie": 0,
+          "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": [
+            "PL"
+          ],
+          "assignedEngineerIds": [
+            "EL"
+          ],
+          "prerequisiteCampaignIds": [],
+          "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3,
+          "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0,
+          "maxSortiesPerDay": 0,
+          "postCompletionReviewWorkdays": 0,
+          "requiredExternalSupportIds": [],
+          "restDaysAfterCompletion": 0,
+          "useGlobalCalendar": true,
+          "weekendDays": [
+            6,
+            0
+          ],
+          "workOnHolidays": false,
+          "useGlobalFlyable": true,
+          "useGlobalLimits": true,
+          "compatibleSimulatorIds": [],
+          "rehearsalRequired": false,
+          "pilotsPerSortie": 0,
+          "engineersPerSortie": 1,
+          "expectedSortieFlightHours": 2,
+          "expectedSortieDutyHours": 4,
+          "expectedSortieFlightDutyHours": 0,
+          "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0,
+          "retestProbabilityFloor": 0,
+          "retestLearningScale": 0,
+          "retestCurve": 0,
+          "retestExponent": 1,
+          "abortProbability": 0
+        }
+      ],
+      "campaignGroups": [],
+      "locations": [],
+      "simulators": [],
+      "externalSupports": [],
+      "config": {
+        "blocksPerDay": 3,
+        "maxSortiesPerPersonPerDay": 6,
+        "maxRehearsalsPerPersonPerDay": 1,
+        "engineersPerSortie": 2,
+        "pilotsPerSortie": 1,
+        "maxRehearsalGapDays": 2,
+        "rehearsalOnWorkdaysOnly": true,
+        "maxFlightHoursPerDay": 6,
+        "maxFlightHoursPer7Days": 30,
+        "maxFlightHoursPer28Days": 100,
+        "maxFlightHoursPerYear": 900,
+        "maxDutyHoursPerDay": 12,
+        "maxDutyHoursPer7Days": 60,
+        "maxDutyHoursPer14Days": 110,
+        "maxDutyHoursPer28Days": 190,
+        "maxFlightDutyHoursPerDay": "Infinity",
+        "minRestHours": 12,
+        "maxConsecutiveFlyingDays": 6,
+        "loadBalanceWindowDays": 7,
+        "simulateYieldInNominal": false,
+        "overrideSortieAbort": false,
+        "sortieAbortOverride": 0.05,
+        "useRevisingEngine": true,
+        "mcUseAdvancedEngine": false
+      },
+      "calendar": {
+        "holidays": [],
+        "weekendDays": [],
+        "extraWorkdays": []
+      },
+      "flyableModel": {
+        "$type": "rate",
+        "rate": 1,
+        "patternLength": 1,
+        "anchor": "2026-06-01"
+      },
+      "horizonStart": "2026-06-01",
+      "horizonEnd": "2026-06-03",
+      "actualSorties": [],
+      "actualRehearsals": [],
+      "actualSimulatorSorties": [],
+      "sortiePins": [],
+      "scopeCampaignIds": [],
+      "status": "Not run yet",
+      "isSelected": false
+    }
+  ],
+  "activeScenarioId": "bottleneck-demo"
+}

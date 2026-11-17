@@ -1,0 +1,431 @@
+{
+  "name": "Complex program — full uncertainty (8+ months)",
+  "scenarios": [
+    {
+      "id": "complex-fullunc",
+      "name": "Full-uncertainty FW program",
+      "createdAt": "00:00",
+      "pilots": [
+        { "id": "P1", "name": "Lead TP", "shortName": "P1", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "P2", "name": "TP 2", "shortName": "P2", "qualifications": [], "typeRatings": [], "leaveWindows": [
+          { "id": "lv-p2", "start": "2026-12-21", "end": "2027-01-04", "note": "annual leave", "days": 15 }
+        ] },
+        { "id": "P3", "name": "TP 3", "shortName": "P3", "qualifications": [], "typeRatings": [], "leaveWindows": [
+          { "id": "lv-p3", "start": "2026-07-13", "end": "2026-07-26", "note": "exchange tour", "days": 14 }
+        ] },
+        { "id": "P4", "name": "TP 4", "shortName": "P4", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "P5", "name": "Flutter Lead", "shortName": "P5", "qualifications": [], "typeRatings": ["TC-201"], "leaveWindows": [] },
+        { "id": "P6", "name": "Flutter 2", "shortName": "P6", "qualifications": [], "typeRatings": ["TC-201"], "leaveWindows": [
+          { "id": "lv-p6", "start": "2026-09-07", "end": "2026-09-18", "note": "course", "days": 12 }
+        ] },
+        { "id": "P7", "name": "Deploy TP A", "shortName": "P7", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "P8", "name": "Deploy TP B", "shortName": "P8", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "P9", "name": "Deploy TP C", "shortName": "P9", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "P10", "name": "Deploy TP D", "shortName": "P10", "qualifications": [], "typeRatings": [], "leaveWindows": [] }
+      ],
+      "engineers": [
+        { "id": "E1", "name": "FTE 1", "shortName": "E1", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E2", "name": "FTE 2", "shortName": "E2", "qualifications": [], "typeRatings": [], "leaveWindows": [
+          { "id": "lv-e2", "start": "2026-08-10", "end": "2026-08-23", "note": "leave", "days": 14 }
+        ] },
+        { "id": "E3", "name": "FTE 3", "shortName": "E3", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E4", "name": "FTE 4", "shortName": "E4", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E5", "name": "FTE 5", "shortName": "E5", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E6", "name": "FTE 6", "shortName": "E6", "qualifications": [], "typeRatings": [], "leaveWindows": [
+          { "id": "lv-e6", "start": "2026-11-02", "end": "2026-11-13", "note": "leave", "days": 12 }
+        ] },
+        { "id": "E7", "name": "FTE 7", "shortName": "E7", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E8", "name": "FTE 8", "shortName": "E8", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E9", "name": "FTE 9", "shortName": "E9", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E10", "name": "FTE 10", "shortName": "E10", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E11", "name": "FTE 11", "shortName": "E11", "qualifications": [], "typeRatings": [], "leaveWindows": [] },
+        { "id": "E12", "name": "FTE 12", "shortName": "E12", "qualifications": [], "typeRatings": [], "leaveWindows": [] }
+      ],
+      "aircraft": [
+        {
+          "id": "TC-101", "name": "TC-101", "minPilots": 1,
+          "maintenanceWindows": [],
+          "periodicMaintenances": [
+            { "intervalFlightHours": 100, "durationDays": 1 },
+            { "intervalFlightHours": 300, "durationDays": 7 }
+          ],
+          "failuresPer100FlightHours": 4, "repairDaysMin": 1, "repairDaysMax": 4
+        },
+        {
+          "id": "TC-102", "name": "TC-102", "minPilots": 1,
+          "maintenanceWindows": [
+            { "id": "mw-tc102-phase", "start": "2026-10-05", "end": "2026-10-18", "note": "phase inspection", "days": 14 }
+          ],
+          "periodicMaintenances": [
+            { "intervalFlightHours": 100, "durationDays": 1 }
+          ],
+          "failuresPer100FlightHours": 5, "repairDaysMin": 1, "repairDaysMax": 5
+        },
+        {
+          "id": "TC-201", "name": "TC-201 (flutter)", "minPilots": 1,
+          "maintenanceWindows": [
+            { "id": "mw-tc201-inst", "start": "2026-06-08", "end": "2026-06-26", "note": "flutter instrumentation fit", "days": 19 }
+          ],
+          "periodicMaintenances": [
+            { "intervalFlightHours": 80, "durationDays": 3 }
+          ],
+          "failuresPer100FlightHours": 8, "repairDaysMin": 2, "repairDaysMax": 7
+        },
+        {
+          "id": "TC-301", "name": "TC-301 (weapon)", "minPilots": 1,
+          "maintenanceWindows": [
+            { "id": "mw-tc301-modblock", "start": "2026-07-06", "end": "2026-08-14", "note": "weapon mod-block integration", "days": 40 }
+          ],
+          "periodicMaintenances": [
+            { "intervalFlightHours": 120, "durationDays": 2 }
+          ],
+          "failuresPer100FlightHours": 6, "repairDaysMin": 2, "repairDaysMax": 6
+        },
+        {
+          "id": "TC-401", "name": "TC-401 (avionics, 2-crew)", "minPilots": 2,
+          "maintenanceWindows": [],
+          "periodicMaintenances": [
+            { "intervalFlightHours": 150, "durationDays": 3 }
+          ],
+          "failuresPer100FlightHours": 5, "repairDaysMin": 1, "repairDaysMax": 5
+        },
+        {
+          "id": "TC-501", "name": "TC-501 (chase)", "minPilots": 1,
+          "maintenanceWindows": [],
+          "periodicMaintenances": [
+            { "intervalFlightHours": 100, "durationDays": 1 }
+          ],
+          "failuresPer100FlightHours": 3, "repairDaysMin": 1, "repairDaysMax": 3
+        }
+      ],
+      "campaigns": [
+        {
+          "id": "GND", "name": "Ground & low-speed",
+          "totalTestPoints": 48, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2026-06-30",
+          "compatibleAircraftIds": ["TC-101", "TC-102"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P1", "P2"], "assignedEngineerIds": ["E1", "E2", "E3"],
+          "prerequisiteCampaignIds": [], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        },
+        {
+          "id": "PERF", "name": "Performance",
+          "totalTestPoints": 120, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2026-08-15",
+          "compatibleAircraftIds": ["TC-101", "TC-102"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P1", "P2"], "assignedEngineerIds": ["E1", "E2", "E3"],
+          "prerequisiteCampaignIds": ["GND"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.22, "retestProbabilityFloor": 0.05, "retestLearningScale": 20, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0.05
+        },
+        {
+          "id": "ENV", "name": "Envelope expansion",
+          "totalTestPoints": 160, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2026-10-15",
+          "compatibleAircraftIds": ["TC-101", "TC-102", "TC-401"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P1", "P2", "P4"], "assignedEngineerIds": ["E1", "E2", "E4"],
+          "prerequisiteCampaignIds": ["PERF"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.25, "retestProbabilityFloor": 0.06, "retestLearningScale": 25, "retestCurve": 1, "retestExponent": 1, "abortProbability": 0.06
+        },
+        {
+          "id": "HQ", "name": "Handling qualities",
+          "totalTestPoints": 160, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2026-12-15",
+          "compatibleAircraftIds": ["TC-101", "TC-102"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P1", "P3"], "assignedEngineerIds": ["E3", "E4"],
+          "prerequisiteCampaignIds": ["ENV"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [1, 2],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        },
+        {
+          "id": "STAB", "name": "Stability & control",
+          "totalTestPoints": 160, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2027-01-31",
+          "compatibleAircraftIds": ["TC-101", "TC-102"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P2", "P4"], "assignedEngineerIds": ["E2", "E3"],
+          "prerequisiteCampaignIds": ["HQ"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        },
+        {
+          "id": "ENVCLR", "name": "Envelope clearance",
+          "totalTestPoints": 128, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2027-02-15",
+          "compatibleAircraftIds": ["TC-101", "TC-102", "TC-401"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P1", "P3"], "assignedEngineerIds": ["E1", "E4"],
+          "prerequisiteCampaignIds": ["STAB"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.20, "retestProbabilityFloor": 0.05, "retestLearningScale": 18, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0.05
+        },
+        {
+          "id": "FLUT", "name": "Flutter clearance",
+          "totalTestPoints": 75, "testPointsPerSortie": 3,
+          "startDate": "2026-06-01", "targetEndDate": "2026-11-30",
+          "compatibleAircraftIds": ["TC-201"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": true,
+          "assignedPilotIds": ["P5", "P6"], "assignedEngineerIds": ["E5", "E6"],
+          "prerequisiteCampaignIds": [], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 1, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": true,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 1.5, "expectedSortieDutyHours": 4, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 3,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.35, "retestProbabilityFloor": 0.08, "retestLearningScale": 15, "retestCurve": 1, "retestExponent": 1.2, "abortProbability": 0.10
+        },
+        {
+          "id": "LOADS", "name": "Structural loads",
+          "totalTestPoints": 60, "testPointsPerSortie": 3,
+          "startDate": "2026-06-01", "targetEndDate": "2026-10-31",
+          "compatibleAircraftIds": ["TC-201", "TC-301"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P5", "P7"], "assignedEngineerIds": ["E5", "E7"],
+          "prerequisiteCampaignIds": [], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 3, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 1, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 1.5, "expectedSortieDutyHours": 4, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        },
+        {
+          "id": "WEAP", "name": "Weapon integration (Konya deployment)",
+          "totalTestPoints": 50, "testPointsPerSortie": 2,
+          "startDate": "2026-06-01", "targetEndDate": "2027-01-31",
+          "compatibleAircraftIds": ["TC-301"],
+          "locationId": "LOC-KONYA",
+          "supportAircraftPerSortie": 1, "supportAircraftIds": ["TC-501"],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P7", "P9"], "assignedEngineerIds": ["E10", "E11"],
+          "prerequisiteCampaignIds": [], "prerequisiteMaintenanceIds": ["mw-tc301-modblock"],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": true,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.15, "retestProbabilityFloor": 0.05, "retestLearningScale": 18, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0.08
+        },
+        {
+          "id": "AVIO", "name": "Avionics",
+          "totalTestPoints": 54, "testPointsPerSortie": 3,
+          "startDate": "2026-06-01", "targetEndDate": "2026-09-30",
+          "compatibleAircraftIds": ["TC-401", "TC-101", "TC-102"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P3", "P4"], "assignedEngineerIds": ["E6", "E7", "E8"],
+          "prerequisiteCampaignIds": [], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 3, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        },
+        {
+          "id": "RADAR", "name": "Radar (Dalaman deployment)",
+          "totalTestPoints": 60, "testPointsPerSortie": 3,
+          "startDate": "2026-06-01", "targetEndDate": "2026-12-31",
+          "compatibleAircraftIds": ["TC-401"],
+          "locationId": "LOC-DALAMAN",
+          "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P8", "P10"], "assignedEngineerIds": ["E8", "E9"],
+          "prerequisiteCampaignIds": ["AVIO"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": true,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": true,
+          "retestProbabilityStart": 0.18, "retestProbabilityFloor": 0.05, "retestLearningScale": 20, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0.05
+        },
+        {
+          "id": "EW", "name": "Electronic warfare",
+          "totalTestPoints": 36, "testPointsPerSortie": 3,
+          "startDate": "2026-06-01", "targetEndDate": "2027-01-31",
+          "compatibleAircraftIds": ["TC-401", "TC-501"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P7", "P8"], "assignedEngineerIds": ["E10", "E11"],
+          "prerequisiteCampaignIds": ["RADAR"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": false,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        },
+        {
+          "id": "CERT", "name": "Certification (final gate)",
+          "totalTestPoints": 100, "testPointsPerSortie": 4,
+          "startDate": "2026-06-01", "targetEndDate": "2027-02-28",
+          "compatibleAircraftIds": ["TC-101", "TC-102", "TC-401"],
+          "locationId": "", "supportAircraftPerSortie": 0, "supportAircraftIds": [],
+          "preferSingleAircraft": false,
+          "assignedPilotIds": ["P1", "P3", "P4"], "assignedEngineerIds": ["E1", "E3", "E4"],
+          "prerequisiteCampaignIds": ["ENVCLR", "FLUT", "WEAP"], "prerequisiteMaintenanceIds": [],
+          "blocksPerSortie": 1, "allowedBlocks": [],
+          "minWorkdaysBetweenSorties": 0, "maxSortiesPerDay": 0,
+          "compatibleSimulatorIds": [], "rehearsalRequired": true,
+          "pilotsPerSortie": 0, "engineersPerSortie": 2,
+          "expectedSortieFlightHours": 2, "expectedSortieDutyHours": 5, "expectedSortieFlightDutyHours": 0, "expectedRehearsalDutyHours": 2,
+          "testEfficiencyEnabled": false,
+          "retestProbabilityStart": 0, "retestProbabilityFloor": 0, "retestLearningScale": 0, "retestCurve": 0, "retestExponent": 1, "abortProbability": 0
+        }
+      ],
+      "locations": [
+        {
+          "id": "LOC-KONYA", "name": "Konya Test Range", "icao": "LTAN",
+          "latitude": 37.979, "longitude": 32.562,
+          "blocksPerDayCap": 2, "hasSimulator": false,
+          "ferryDays": 1, "ferryFlightHours": 1.5, "ferryDutyHours": 5,
+          "setupDays": 2, "teardownDays": 1,
+          "flyableModel": {
+            "$type": "probabilistic",
+            "monthlyRates": [0.55, 0.62, 0.68, 0.72, 0.80, 0.88, 0.97, 0.98, 0.92, 0.85, 0.74, 0.52],
+            "persistence": 0.45, "patternLength": 30, "anchor": "2026-06-01"
+          },
+          "rangeModel": {
+            "$type": "probabilistic",
+            "monthlyRates": [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7],
+            "persistence": 0.5, "patternLength": 14, "anchor": "2026-06-01"
+          }
+        },
+        {
+          "id": "LOC-DALAMAN", "name": "Dalaman", "icao": "LTBS",
+          "latitude": 36.713, "longitude": 28.793,
+          "blocksPerDayCap": null, "hasSimulator": true,
+          "ferryDays": 1, "ferryFlightHours": 2, "ferryDutyHours": 6,
+          "setupDays": 2, "teardownDays": 2,
+          "flyableModel": {
+            "$type": "probabilistic",
+            "monthlyRates": [0.60, 0.64, 0.70, 0.78, 0.86, 0.93, 0.98, 0.98, 0.94, 0.88, 0.76, 0.58],
+            "persistence": 0.4, "patternLength": 30, "anchor": "2026-06-01"
+          },
+          "rangeModel": null
+        }
+      ],
+      "simulators": [
+        {
+          "id": "SIM-1", "name": "Main FMS-1", "locationId": "", "maxBlocksPerDay": 0,
+          "maintenanceWindows": [
+            { "id": "mw-sim1", "start": "2026-09-21", "end": "2026-09-27", "note": "sim software upgrade", "days": 7 }
+          ],
+          "failuresPer100Hours": 6, "repairDaysMin": 1, "repairDaysMax": 3
+        },
+        {
+          "id": "SIM-2", "name": "Main FMS-2", "locationId": "", "maxBlocksPerDay": 2,
+          "maintenanceWindows": [],
+          "failuresPer100Hours": 4, "repairDaysMin": 1, "repairDaysMax": 2
+        },
+        {
+          "id": "SIM-DAL", "name": "Dalaman FMS", "locationId": "LOC-DALAMAN", "maxBlocksPerDay": 0,
+          "maintenanceWindows": [],
+          "failuresPer100Hours": 5, "repairDaysMin": 1, "repairDaysMax": 3
+        }
+      ],
+      "config": {
+        "blocksPerDay": 3,
+        "maxSortiesPerPersonPerDay": 6,
+        "maxRehearsalsPerPersonPerDay": 1,
+        "engineersPerSortie": 2,
+        "pilotsPerSortie": 1,
+        "maxRehearsalGapDays": 2,
+        "rehearsalOnWorkdaysOnly": true,
+        "maxFlightHoursPerDay": 6,
+        "maxFlightHoursPer7Days": 30,
+        "maxFlightHoursPer28Days": 100,
+        "maxFlightHoursPerYear": 900,
+        "maxDutyHoursPerDay": 12,
+        "maxDutyHoursPer7Days": 60,
+        "maxDutyHoursPer14Days": 110,
+        "maxDutyHoursPer28Days": 190,
+        "maxFlightDutyHoursPerDay": "Infinity",
+        "minRestHours": 12,
+        "maxConsecutiveFlyingDays": 6,
+        "loadBalanceWindowDays": 7,
+        "simulateYieldInNominal": false,
+        "overrideSortieAbort": false,
+        "sortieAbortOverride": 0.05,
+        "useRevisingEngine": false,
+        "mcUseAdvancedEngine": false
+      },
+      "calendar": {
+        "holidays": [
+          "2026-07-15",
+          "2026-08-30",
+          "2026-10-29",
+          "2027-01-01"
+        ],
+        "weekendDays": [6, 0],
+        "extraWorkdays": []
+      },
+      "flyableModel": {
+        "$type": "probabilistic",
+        "monthlyRates": [0.42, 0.54, 0.56, 0.58, 0.69, 0.77, 0.96, 0.98, 0.89, 0.82, 0.71, 0.40],
+        "persistence": 0.40,
+        "patternLength": 30,
+        "anchor": "2026-06-01"
+      },
+      "horizonStart": "2026-06-01",
+      "horizonEnd": "2027-12-31",
+      "masterDeadline": "2027-04-15",
+      "actualSorties": [],
+      "actualRehearsals": [],
+      "scopeCampaignIds": [],
+      "status": "Not run yet",
+      "isSelected": false
+    }
+  ],
+  "activeScenarioId": "complex-fullunc"
+}

@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        xmlns:views="using:MOIRAI.Views"
+        x:Class="MOIRAI.Views.LocationPickerDialog"
+        x:DataType="vm:LocationPickerViewModel"
+        Title="Pick location on map"
+        Width="900" Height="640" MinWidth="640" MinHeight="480"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+        <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,12">
+            <TextBlock Classes="h2" Text="{Binding LocationName, StringFormat='Pick the test range for “{0}”'}"/>
+            <TextBlock Classes="muted"
+                       Text="Airfields shown have a runway of at least 8,000 ft."/>
+        </StackPanel>
+
+        <Border Grid.Row="1" CornerRadius="6" ClipToBounds="True"
+                BorderBrush="{DynamicResource Border}" BorderThickness="1">
+            <views:LocationPickerControl x:Name="Picker"
+                                         PinLon="{Binding PinLon, Mode=TwoWay}"
+                                         PinLat="{Binding PinLat, Mode=TwoWay}"
+                                         PinIcao="{Binding PinIcao, Mode=TwoWay}"
+                                         HasPin="{Binding HasPin, Mode=TwoWay}"/>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,14,0,0">
+            <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextMuted}"
+                       Text="{Binding CoordinatesText}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                <Button Classes="ghost" Content="Clear" Click="OnClear"/>
+                <Button Classes="ghost" Content="Cancel" Click="OnCancel"/>
+                <Button Content="Use this location" Click="OnConfirm" IsDefault="True"
+                        Background="{DynamicResource Accent}" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        xmlns:views="using:MOIRAI.Views"
+        x:Class="MOIRAI.Views.ResultsWindow"
+        x:DataType="vm:PlanViewModel"
+        Title="Scenario results"
+        Width="1300" Height="850" WindowState="Maximized"
+        Background="{DynamicResource AppBg}">
+
+    <Grid RowDefinitions="Auto,*" Margin="24">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Classes="h1" Text="Results"/>
+            <TextBlock Classes="muted" Text="{Binding CurrentScenarioLabel}" VerticalAlignment="Center"/>
+        </StackPanel>
+        <views:PlanResultsView Grid.Row="1" Margin="0,14,0,0"/>
+    </Grid>
+</Window>

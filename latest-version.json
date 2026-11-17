@@ -1,0 +1,13 @@
+{
+  "version": "1.3.6",
+  "url": "https://github.com/Erdemes/MOIRAI/releases",
+  "notes": "Crew load balancing, crew-aware aircraft selection and rehearsal placement improvements; Monte Carlo engine fix.",
+  "downloadUrl": "",
+  "changelog": [
+    "IMPROVED: Flight crew load balancing",
+    "IMPROVED: Aircraft pool selection based on the type rated crew availability",
+    "IMPROVED: Rehearsal placements",
+    "FIXED: Monte Carlo analysis now uses the same engine as the plan",
+    "FIXED: Campaign post completion rest days counted as flyable day in some cases"
+  ]
+}

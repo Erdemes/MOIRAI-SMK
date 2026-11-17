@@ -1,0 +1,163 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        xmlns:views="using:MOIRAI.Views"
+        xmlns:b="using:MOIRAI.Views.Behaviors"
+        x:Class="MOIRAI.Views.ComparisonWindow"
+        x:DataType="vm:PlanComparisonViewModel"
+        Title="Scenario comparison"
+        Width="1400" Height="850" WindowState="Maximized"
+        Background="{DynamicResource AppBg}">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24" Spacing="14">
+            <TextBlock Classes="h1" Text="Plan comparison"/>
+
+            <Border Classes="card">
+                <StackPanel Spacing="6">
+                    <TextBlock Classes="h2" Text="Campaign outcomes"/>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="12,0,0,6">
+                                <TextBlock Classes="label" Text="Campaign" Width="180" VerticalAlignment="Bottom"/>
+                                <ItemsControl ItemsSource="{Binding Headers}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ComparisonHeader">
+                                            <StackPanel Width="190" Margin="0,0,8,0" Spacing="2">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                                <TextBlock Classes="muted" Text="{Binding Summary}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <ItemsControl ItemsSource="{Binding Rows}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ComparisonRow">
+                                        <Border Classes="row">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Campaign}" Width="180"
+                                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                <ItemsControl ItemsSource="{Binding Cells}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="vm:ComparisonCell">
+                                                            <TextBlock Width="190" Margin="0,0,8,0"
+                                                                       VerticalAlignment="Center"
+                                                                       Text="{Binding Text}"
+                                                                       Classes.met="{Binding IsMet}"
+                                                                       Classes.late="{Binding IsLate}"
+                                                                       Classes.bad="{Binding IsIncomplete}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding HasSettings}">
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Spacing="2">
+                            <TextBlock Classes="h2" Text="Settings &amp; model"/>
+                            <TextBlock Classes="muted" Text="{Binding DiffSummary}"/>
+                        </StackPanel>
+                        <CheckBox Grid.Column="1" VerticalAlignment="Center"
+                                  Content="Show only differences" IsChecked="{Binding ShowOnlyDiffs}"/>
+                    </Grid>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="12,2,0,4">
+                                <TextBlock Classes="label" Text="Setting" Width="240" VerticalAlignment="Bottom"/>
+                                <ItemsControl ItemsSource="{Binding Headers}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ComparisonHeader">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Width="190"
+                                                       Margin="0,0,8,0" TextTrimming="CharacterEllipsis"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <ItemsControl ItemsSource="{Binding SettingGroups}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SettingGroup">
+                                        <StackPanel Margin="0,8,0,0">
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource Accent}" Margin="12,0,0,4"/>
+                                            <ItemsControl ItemsSource="{Binding Rows}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:SettingRow">
+                                                        <Border Classes="row" Classes.diffrow="{Binding IsDifferent}"
+                                                                Padding="12,6" Margin="0,0,0,4">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding Label}" Width="240"
+                                                                           VerticalAlignment="Center" TextWrapping="Wrap"
+                                                                           Classes.diff="{Binding IsDifferent}"/>
+                                                                <ItemsControl ItemsSource="{Binding Values}">
+                                                                    <ItemsControl.ItemsPanel>
+                                                                        <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                                                                    </ItemsControl.ItemsPanel>
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate x:DataType="x:String">
+                                                                            <TextBlock Text="{Binding}" Width="190" Margin="0,0,8,0"
+                                                                                       VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <ItemsControl ItemsSource="{Binding Gantts}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PlanGanttItem">
+                        <Expander Classes="panel" IsExpanded="True" Margin="0,0,0,14">
+                            <Expander.Header>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBlock Classes="h2" Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    <TextBlock Classes="muted" Text="{Binding Summary}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <ScrollViewer Classes="ganttScroll"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto" MaxHeight="420"
+                                          b:MiddleButtonPan.Enabled="True">
+                                <views:GanttControl Data="{Binding Gantt}"/>
+                            </ScrollViewer>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

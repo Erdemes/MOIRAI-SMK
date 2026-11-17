@@ -1,0 +1,400 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MOIRAI.ViewModels"
+             xmlns:views="using:MOIRAI.Views"
+             x:Class="MOIRAI.Views.PlanView"
+             x:DataType="vm:PlanViewModel">
+
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,18">
+            <TextBlock Classes="h1" Text="Planning"/>
+            <TextBlock Classes="h1" Foreground="{DynamicResource TextMuted}"
+                       Text="{Binding ActiveScenarioName, StringFormat='- {0}'}"/>
+        </StackPanel>
+
+        <SplitView Grid.Row="1" x:Name="SettingsSplit" IsPaneOpen="True"
+                   DisplayMode="CompactInline" OpenPaneLength="640" CompactPaneLength="44"
+                   PaneBackground="Transparent">
+        <SplitView.Pane>
+            <Grid RowDefinitions="Auto,Auto,*">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Classes="ghost" x:Name="SettingsToggle" Content="«" Width="36"
+                            HorizontalContentAlignment="Center"
+                            Click="OnToggleSettings" ToolTip.Tip="Toggle settings"/>
+                    <TextBlock Classes="h2" Text="Settings" VerticalAlignment="Center"
+                               IsVisible="{Binding #SettingsSplit.IsPaneOpen}"/>
+                    <Button Classes="ghost" Content="Save settings"
+                            Command="{Binding SaveSettingsCommand}"
+                            IsVisible="{Binding #SettingsSplit.IsPaneOpen}"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                           Margin="0,8,0,0" Foreground="{DynamicResource Danger}"
+                           IsVisible="{Binding HasError}"/>
+
+                <LayoutTransformControl Grid.Row="2" HorizontalAlignment="Center" Margin="0,12,0,0"
+                                        IsVisible="{Binding !#SettingsSplit.IsPaneOpen}">
+                    <LayoutTransformControl.LayoutTransform>
+                        <RotateTransform Angle="90"/>
+                    </LayoutTransformControl.LayoutTransform>
+                    <TextBlock Classes="muted" Text="Settings"/>
+                </LayoutTransformControl>
+
+                <ScrollViewer Grid.Row="2" Margin="0,10,0,0"
+                              IsVisible="{Binding #SettingsSplit.IsPaneOpen}"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="14">
+
+                        <Border Classes="card" Padding="12,4"
+                                IsVisible="{Binding HasValidationIssues}">
+                            <Expander Classes="section" IsExpanded="True">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="Pre-run checks" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <TextBlock Classes="muted" Text="{Binding ValidationSummary}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <StackPanel Spacing="6">
+                                    <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto"
+                                                  HorizontalScrollBarVisibility="Disabled">
+                                        <ItemsControl ItemsSource="{Binding ValidationIssues}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:ValidationRow">
+                                                    <Grid ColumnDefinitions="Auto,8,Auto,8,*" Margin="0,1">
+                                                        <TextBlock Grid.Column="0" Text="{Binding Glyph}"
+                                                                   Foreground="{Binding Brush}" VerticalAlignment="Top"/>
+                                                        <Border Grid.Column="2" CornerRadius="3" Padding="6,0" VerticalAlignment="Top"
+                                                                BorderThickness="1" BorderBrush="{Binding Brush}">
+                                                            <TextBlock Text="{Binding Category}" FontSize="11"
+                                                                       Foreground="{Binding Brush}"/>
+                                                        </Border>
+                                                        <TextBlock Grid.Column="4" Text="{Binding Text}" TextWrapping="Wrap"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+
+                                </StackPanel>
+                            </Expander>
+                        </Border>
+
+                        <CheckBox Content="Advanced planning engine"
+                                  IsChecked="{Binding Form.UseRevisingEngine}" ToolTip.Tip="Searches campaign order for a better schedule. Increases run time."/>
+
+                        <Grid ColumnDefinitions="*,14,*">
+                                <Expander Grid.Column="0" Classes="section" Header="Planning horizon"
+                                          IsExpanded="True" VerticalAlignment="Top">
+                                    <StackPanel Spacing="10">
+                                        <Grid ColumnDefinitions="*,12,*">
+                                            <StackPanel Grid.Column="0" Spacing="4">
+
+                                            </StackPanel>
+                                            <StackPanel Grid.ColumnSpan="3" Grid.Column="0" Spacing="4">
+                                                <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*">
+                                                    <TextBlock Grid.Row="1" Grid.Column="1" Classes="label" Text="End"/>    
+                                                    <WrapPanel Grid.Row="0" Grid.Column="1">
+                                                        <Button Classes="ghost" Content="+1 month" Padding="8,2" Margin="0,0,5,5"
+                                                                Command="{Binding Form.SetHorizonPlus1MonthCommand}"/>
+                                                        <Button Classes="ghost" Content="+3 months" Padding="8,2" Margin="0,0,5,5"
+                                                                Command="{Binding Form.SetHorizonPlus3MonthsCommand}"/>
+                                                        <Button Classes="ghost" Content="+6 months" Padding="8,2" Margin="0,0,5,5"
+                                                                Command="{Binding Form.SetHorizonPlus6MonthsCommand}"/>
+                                                        <Button Classes="ghost" Content="+1 year" Padding="8,2" Margin="0,0,5,5"
+                                                                Command="{Binding Form.SetHorizonPlus1YearCommand}"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="Start"/>
+                                                    <CalendarDatePicker Grid.Row="2" Grid.Column="0"
+                                                                        SelectedDate="{Binding Form.HorizonStart, Mode=TwoWay}"
+                                                                        SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                                                    <CalendarDatePicker Grid.Row="2" Grid.Column="1"
+                                                                        SelectedDate="{Binding Form.HorizonEnd, Mode=TwoWay}"
+                                                                        SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                                                </Grid>
+
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Classes="label" Text="Master deadline (optional)"/>
+                                            <CalendarDatePicker SelectedDate="{Binding Form.MasterDeadline, Mode=TwoWay}"
+                                                                SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                                            <TextBlock Classes="muted" TextWrapping="Wrap"
+                                                       Text="Campaign targets and the master deadline do not stop scheduling."/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander Grid.Column="2" Classes="section" Header="Campaigns to plan"
+                                          IsExpanded="True" VerticalAlignment="Top">
+                                    <StackPanel Spacing="10">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Button Classes="ghost" Content="All" Padding="10,4"
+                                                    Command="{Binding SelectAllCampaignsCommand}"/>
+                                            <Button Classes="ghost" Content="None" Padding="10,4"
+                                                    Command="{Binding ClearCampaignsCommand}"/>
+                                        </StackPanel>
+                                        <TextBlock Classes="muted" Text="No campaigns."
+                                                   TextWrapping="Wrap" IsVisible="{Binding !HasCampaigns, Mode=OneWay}"/>
+                                        <ItemsControl ItemsSource="{Binding ScopeGroups}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:ScopeGroupNode">
+                                                    <StackPanel Spacing="2" Margin="0,0,0,8">
+                                                        <CheckBox Content="{Binding Name}" FontWeight="SemiBold"
+                                                                  IsThreeState="True"
+                                                                  IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
+                                                        <ItemsControl ItemsSource="{Binding Children}" Margin="22,0,0,0">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="vm:SelectableOption">
+                                                                    <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                                              Margin="0,0,16,2"/>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl ItemsSource="{Binding UngroupedScope}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:SelectableOption">
+                                                    <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                              Margin="0,0,16,2"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Expander>
+                        </Grid>
+
+                            <Expander Classes="section" Header="Working calendar"
+                                      IsExpanded="True" VerticalAlignment="Top">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Classes="label" Text="Weekend days"/>
+                                    <WrapPanel>
+                                        <CheckBox Content="Mon" IsChecked="{Binding Form.WeekendMonday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Tue" IsChecked="{Binding Form.WeekendTuesday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Wed" IsChecked="{Binding Form.WeekendWednesday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Thu" IsChecked="{Binding Form.WeekendThursday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Fri" IsChecked="{Binding Form.WeekendFriday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Sat" IsChecked="{Binding Form.WeekendSaturday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Sun" IsChecked="{Binding Form.WeekendSunday}" Margin="0,0,12,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Classes="label" Text="Holidays (comma-separated yyyy-MM-dd)"/>
+                                        <Grid ColumnDefinitions="*,8,Auto">
+                                            <TextBox Grid.Column="0" Text="{Binding Form.Holidays}"
+                                                     PlaceholderText="2026-06-08, 2026-07-15"/>
+                                            <Button Grid.Column="2" Classes="ghost" Content="Import from CSV…"
+                                                    VerticalAlignment="Top"
+                                                    Command="{Binding ImportHolidaysFromFileCommand}"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Classes="section" Header="Flyable days"
+                                      IsExpanded="True" VerticalAlignment="Top">
+                                <StackPanel Spacing="10">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Classes="label" Text="Model"/>
+                                        <ComboBox SelectedIndex="{Binding Form.FlyableModelIndex}" HorizontalAlignment="Stretch">
+                                            <ComboBoxItem Content="Rate-based (uniform pattern)"/>
+                                            <ComboBoxItem Content="Probabilistic (seasonal monthly rates)"/>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="4" IsVisible="{Binding Form.IsRateBased}">
+                                        <TextBlock Classes="label" Text="Flyable rate (0-1)"/>
+                                        <NumericUpDown Value="{Binding Form.FlyableRate}" Minimum="0" Maximum="1" Increment="0.05" FormatString="0.0#"/>
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="8" IsVisible="{Binding Form.IsProbabilistic}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Grid.Column="0" Classes="label" Text="Monthly flyable rates (0-1)"
+                                                       VerticalAlignment="Center"/>
+                                            <Button Grid.Column="1" Classes="ghost" Content="Reset to defaults"
+                                                    Command="{Binding Form.ResetWeatherToDefaultsCommand}"/>
+                                        </Grid>
+                                        <ItemsControl ItemsSource="{Binding Form.MonthlyRates}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <UniformGrid Columns="4"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:MonthRateOption">
+                                                    <StackPanel Spacing="2" Margin="0,0,10,10">
+                                                        <TextBlock Classes="label" Text="{Binding Month}"/>
+                                                        <NumericUpDown Value="{Binding Rate}" Minimum="0" Maximum="1"
+                                                                       MinWidth="110"
+                                                                       Increment="0.05" FormatString="0.0#"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Classes="label" Text="Persistence φ (0-0.95)"/>
+                                            <NumericUpDown Value="{Binding Form.Persistence}" Minimum="0" Maximum="0.95"
+                                                           Increment="0.05" FormatString="0.0#"/>
+                                        </StackPanel>
+
+                                    </StackPanel>
+
+                                </StackPanel>
+                            </Expander>
+
+                        <Expander Classes="section" Header="Test efficiency" IsExpanded="True" IsVisible="False">
+                            <StackPanel Spacing="10">
+                                <CheckBox Content="Include expected retest and abort losses"
+                                          IsChecked="{Binding Form.SimulateYieldInNominal}" ToolTip.Tip="Applies expected losses to the nominal plan. Monte Carlo always samples enabled losses."/>
+                                <CheckBox Content="Override campaign sortie abort probability"
+                                          IsChecked="{Binding Form.OverrideSortieAbort}" ToolTip.Tip="Replaces individual campaign abort probabilities."/>
+                                <StackPanel Spacing="4" IsEnabled="{Binding Form.OverrideSortieAbort}"
+                                            HorizontalAlignment="Left" MinWidth="220">
+                                    <TextBlock Classes="label" Text="Program abort probability (0-0.95)"/>
+                                    <NumericUpDown Value="{Binding Form.SortieAbortOverride}"
+                                                   Minimum="0" Maximum="0.95" Increment="0.05" FormatString="0.0#"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <Expander Classes="section" Header="Operational Limits"
+                                  IsExpanded="True">
+                            <StackPanel Spacing="10">
+                                <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Classes="label" Text="Blocks per day"/>
+                                        <NumericUpDown Value="{Binding Form.BlocksPerDay}" Minimum="1" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Spacing="4">
+                                        <TextBlock Classes="label" Text="Load-balance window (days)"/>
+                                        <NumericUpDown Value="{Binding Form.LoadBalanceWindowDays}" Minimum="1" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4" Spacing="4">
+                                        <TextBlock Classes="label" Text="Pilots per sortie"/>
+                                        <NumericUpDown Value="{Binding Form.PilotsPerSortie}" Minimum="0" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="6" Spacing="4">
+                                        <TextBlock Classes="label" Text="FTEs per sortie"/>
+                                        <NumericUpDown Value="{Binding Form.EngineersPerSortie}" Minimum="0" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Classes="label" Text="Max sorties / person / day"/>
+                                        <NumericUpDown Value="{Binding Form.MaxSortiesPerDay}" Minimum="0" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Spacing="4">
+                                        <TextBlock Classes="label" Text="Max rehearsals / person / day"/>
+                                        <NumericUpDown Value="{Binding Form.MaxRehearsalsPerDay}" Minimum="0" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4" Spacing="4">
+                                        <TextBlock Classes="label" Text="Max rehearsal gap (working days)"/>
+                                        <NumericUpDown Value="{Binding Form.MaxRehearsalGapDays}" Minimum="0" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="6" Spacing="4">
+                                        <TextBlock Classes="label" Text="Max consecutive flying days"/>
+                                        <NumericUpDown Value="{Binding Form.MaxConsecutiveFlyingDays}" Minimum="0" Increment="1" FormatString="0"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Classes="label" Text="Min rest (hours)"/>
+                                        <NumericUpDown Value="{Binding Form.MinRestHours}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <CheckBox Grid.Column="2" Grid.ColumnSpan="5" Content="Rehearsals on workdays only"
+                                              IsChecked="{Binding Form.RehearsalOnWorkdaysOnly}" VerticalAlignment="Bottom"/>
+                                </Grid>
+
+                                <TextBlock Classes="label" Text="Flight-hour caps" Margin="0,4,0,0"/>
+                                <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Classes="label" Text="per day"/>
+                                        <NumericUpDown Value="{Binding Form.MaxFlightHoursPerDay}" Minimum="0" Increment="0.5" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Spacing="4">
+                                        <TextBlock Classes="label" Text="per 7 days"/>
+                                        <NumericUpDown Value="{Binding Form.MaxFlightHoursPer7Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4" Spacing="4">
+                                        <TextBlock Classes="label" Text="per 28 days"/>
+                                        <NumericUpDown Value="{Binding Form.MaxFlightHoursPer28Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="6" Spacing="4">
+                                        <TextBlock Classes="label" Text="per year"/>
+                                        <NumericUpDown Value="{Binding Form.MaxFlightHoursPerYear}" Minimum="0" Increment="10" FormatString="0.##"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Classes="label" Text="Duty-hour caps" Margin="0,4,0,0"/>
+                                <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                    <StackPanel Grid.Column="0" Spacing="4">
+                                        <TextBlock Classes="label" Text="per day"/>
+                                        <NumericUpDown Value="{Binding Form.MaxDutyHoursPerDay}" Minimum="0" Increment="0.5" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Spacing="4">
+                                        <TextBlock Classes="label" Text="per 7 days"/>
+                                        <NumericUpDown Value="{Binding Form.MaxDutyHoursPer7Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4" Spacing="4">
+                                        <TextBlock Classes="label" Text="per 14 days"/>
+                                        <NumericUpDown Value="{Binding Form.MaxDutyHoursPer14Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="6" Spacing="4">
+                                        <TextBlock Classes="label" Text="per 28 days"/>
+                                        <NumericUpDown Value="{Binding Form.MaxDutyHoursPer28Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </SplitView.Pane>
+
+        <Grid x:Name="ResultsArea" RowDefinitions="Auto,*" Margin="14,0,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Classes="ghost" x:Name="ResultsToggle" Content="«" Width="36"
+                        HorizontalContentAlignment="Center"
+                        Click="OnToggleResults" ToolTip.Tip="Toggle results"/>
+                <TextBlock x:Name="ResultsTitle" Classes="h2" Text="Results" VerticalAlignment="Center"/>
+                <Button Classes="ghost" x:Name="UndockResultsButton" Content="⧉" Width="36"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding UndockResultsCommand}"/>
+                <Button Classes="ghost" x:Name="AnalyzeButton" Content="Analyze"
+                        Command="{Binding AnalyzeCommand}" IsEnabled="{Binding CanAnalyze}"/>
+                <Button Classes="ghost" x:Name="ViewDayLogButton" Content="View DayLog"
+                        Command="{Binding ViewDayLogCommand}" IsEnabled="{Binding CanAnalyze}"/>
+            </StackPanel>
+
+            <LayoutTransformControl x:Name="ResultsCollapsedLabel" Grid.Row="1"
+                                    HorizontalAlignment="Center" Margin="0,12,0,0" IsVisible="False">
+                <LayoutTransformControl.LayoutTransform>
+                    <RotateTransform Angle="90"/>
+                </LayoutTransformControl.LayoutTransform>
+                <TextBlock Classes="muted" Text="Results"/>
+            </LayoutTransformControl>
+
+            <views:PlanResultsView x:Name="ResultsContent" Grid.Row="1" Margin="0,10,0,0"/>
+        </Grid>
+        </SplitView>
+
+        <StackPanel Grid.Row="2" Margin="0,16,0,0" HorizontalAlignment="Center" Spacing="8">
+            <Button HorizontalAlignment="Center"
+                    Content="Run scenario" Command="{Binding GenerateCommand}"
+                    Padding="40,9"
+                    Background="{DynamicResource Accent}" Foreground="White"/>
+            <TextBlock HorizontalAlignment="Center" FontWeight="SemiBold"
+                       Foreground="{DynamicResource Success}"
+                       Text="{Binding RunStatusMessage}" IsVisible="{Binding HasRunStatus}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

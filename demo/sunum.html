@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOIRAI — Üst Yönetim Sunumu</title>
+<style>
+  :root{
+    --bg:#0d1117; --bg2:#161b22; --card:#1c2330; --ink:#e6edf3; --muted:#9aa7b6;
+    --accent:#4ea1ff; --good:#3fb950; --warn:#d29922; --bad:#f85149; --line:#30363d;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+  #deck{height:100vh;width:100vw;overflow:hidden;position:relative}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;
+    padding:5vh 7vw;animation:fade .35s ease}
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h1{font-size:3.4rem;margin:0 0 .3em;line-height:1.05}
+  h2{font-size:2.1rem;margin:0 0 .6em;color:var(--accent);line-height:1.1}
+  h3{font-size:1.25rem;margin:.2em 0;color:var(--muted);font-weight:600}
+  p,li{font-size:1.35rem;line-height:1.5;color:var(--ink)}
+  .muted{color:var(--muted)}
+  ul{margin:.3em 0 0;padding-left:1.2em}
+  li{margin:.5em 0}
+  .lead{font-size:1.7rem;color:var(--muted);max-width:60ch}
+  .kicker{letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+    font-size:1rem;font-weight:700;margin-bottom:1.2em}
+  .grid{display:grid;gap:1.1rem;margin-top:.6em}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:1.2rem 1.4rem}
+  .card h3{color:var(--accent);font-size:1.15rem;margin-bottom:.4em}
+  .card p{font-size:1.12rem;color:var(--muted);margin:.2em 0}
+  .big{font-size:2.6rem;font-weight:800}
+  table{border-collapse:collapse;width:100%;margin-top:.5em;font-size:1.18rem}
+  th,td{border:1px solid var(--line);padding:.55rem .8rem;text-align:left}
+  th{background:var(--bg2);color:var(--muted);font-weight:600}
+  .met{color:var(--good);font-weight:700}
+  .late{color:var(--bad);font-weight:700}
+  .risk{color:var(--warn);font-weight:700}
+  .pill{display:inline-block;padding:.15em .7em;border-radius:999px;font-size:.95rem;
+    font-weight:700;border:1px solid var(--line)}
+  .pill.good{color:var(--good);border-color:var(--good)}
+  .pill.bad{color:var(--bad);border-color:var(--bad)}
+  .pill.warn{color:var(--warn);border-color:var(--warn)}
+  .footer{position:absolute;bottom:2.2vh;left:7vw;right:7vw;display:flex;
+    justify-content:space-between;align-items:center;color:var(--muted);font-size:.95rem;
+    border-top:1px solid var(--line);padding-top:.8rem}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);transition:width .3s}
+  .quote{font-size:2rem;line-height:1.4;max-width:48ch;border-left:4px solid var(--accent);
+    padding-left:1em;color:var(--ink)}
+  .tag{display:inline-block;background:var(--bg2);border:1px solid var(--line);
+    border-radius:8px;padding:.15em .6em;font-size:.95rem;color:var(--muted);margin:.15em .3em .15em 0}
+  .center{align-items:center;justify-content:center;text-align:center}
+  .hint{position:fixed;bottom:1vh;right:1.5vw;color:#3a4452;font-size:.8rem}
+  .arrow{color:var(--muted);font-size:1.4rem;margin:0 .3em}
+  b.accent{color:var(--accent)}
+  .note{font-size:1.05rem;color:var(--muted);margin-top:.8em;font-style:italic}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div id="deck">
+
+  <!-- 1 TITLE -->
+  <section class="slide center">
+    <div class="kicker">Uçuş Testi Planlama &amp; Karar Destek Aracı</div>
+    <h1>MOIRAI</h1>
+    <p class="lead">Uçuş testi kampanyalarını gün-gün çizelgeye döken; deadline'ları,
+    <b class="accent">nedenleriyle</b> birlikte gösteren; hava belirsizliği altında
+    <b class="accent">riski sayısallaştıran</b> ve düzeltme için
+    <b class="accent">kaynak önerisi</b> üreten planlama motoru.</p>
+    <p class="note">MATLAB prototipinden C# / Avalonia (MVVM) ürün sürümüne port — çalışan demo</p>
+  </section>
+
+  <!-- 2 PROBLEM -->
+  <section class="slide">
+    <div class="kicker">Sorun</div>
+    <h2>Uçuş testi planı kırılgandır ve gözle görülmez</h2>
+    <div class="grid g2">
+      <div class="card"><h3>Elle planlama</h3><p>Excel + tecrübe. Bir kampanya kayınca
+        zincirleme etkisi geç fark edilir; plan savunulması zordur.</p></div>
+      <div class="card"><h3>"Neden kaydı?" belirsiz</h3><p>Uçak mı, ekip mi, hava mı,
+        önkoşul mu? Doğru teşhis olmadan yanlış kaynağa para harcanır.</p></div>
+      <div class="card"><h3>Hava riski görünmez</h3><p>Tek bir "iyimser" takvim çizilir;
+        kötü hava serileri planı tutmaz ama bu önceden bilinmez.</p></div>
+      <div class="card"><h3>Kaynak kararı sezgisel</h3><p>"+1 uçak mı, +1 pilot mu?"
+        sorusu rakama değil, hissiyata dayanır.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 SOLUTION -->
+  <section class="slide">
+    <div class="kicker">Çözüm</div>
+    <h2>Dört yetenek, tek motor</h2>
+    <div class="grid g2">
+      <div class="card"><h3>1 · Çizelge</h3><p>Kaynaklar + kampanyalar + FTOM kuralları →
+        gün içi <b class="accent">blok</b> seviyesinde sorti &amp; sim provası takvimi (Gantt).</p></div>
+      <div class="card"><h3>2 · Neden analizi</h3><p>Her kampanyanın kaçma sebebini sayar:
+        <span class="tag">uçak</span><span class="tag">pilot</span><span class="tag">mühendis</span>
+        <span class="tag">hava</span><span class="tag">önkoşul</span><span class="tag">prova</span></p></div>
+      <div class="card"><h3>3 · Hava riski (Monte Carlo)</h3><p>Mevsimsel + seri (streak) hava
+        modeliyle her deadline için <b class="accent">tutturma olasılığı</b>.</p></div>
+      <div class="card"><h3>4 · Kaynak önerisi</h3><p>Hedef güvene ulaşmak için
+        <b class="accent">en az değişikliği</b> bulan akıllı arama — uçak/ekip ekle,
+        yeniden ata, limit gevşet veya kapsam ayarla.</p></div>
+    </div>
+  </section>
+
+  <!-- 4 HOW IT WORKS -->
+  <section class="slide">
+    <div class="kicker">Nasıl çalışır</div>
+    <h2>Girdi → Motor → Karar</h2>
+    <div class="grid g3">
+      <div class="card"><h3>Girdi</h3>
+        <p>• Kaynaklar: pilot, test mühendisi, uçak (kuyruk no)</p>
+        <p>• Kampanyalar: test puanı, tarih, uyumlu uçak, ekip, önkoşul</p>
+        <p>• Kurallar: FTOM uçuş/görev saat limitleri, tatil, hava, bakım, izin</p></div>
+      <div class="card"><h3>Motor</h3>
+        <p>• Deadline-sıralı, açgözlü (greedy), gün-gün çizelgeleme</p>
+        <p>• Gün içi blok yerleşimi (sabah/öğle/öğleden sonra)</p>
+        <p>• Haftalık ekip yük dengeleme; tüm FTOM pencere limitleri</p>
+        <p>• <b class="accent">UI'dan bağımsız</b>, saf, test edilebilir çekirdek</p></div>
+      <div class="card"><h3>Çıktı</h3>
+        <p>• Gantt (sorti + prova), Excel dışa aktarım</p>
+        <p>• Deadline durumu: Tutuyor / Geç / Tamamlanamadı</p>
+        <p>• Bottleneck raporu + risk profili + öneri</p></div>
+    </div>
+    <p class="note">Hiçbir sabit (constant) motora gömülü değil — tüm limitler veridir.
+      Kurum kuralı değişirse kod değişmez, ayar değişir.</p>
+  </section>
+
+  <!-- 5 DEMO 1 INTRO -->
+  <section class="slide center">
+    <div class="kicker">Canlı Demo · Senaryo 1</div>
+    <h1>İlkbahar–Yaz Test Programı 2026</h1>
+    <p class="lead">4 kampanya · 4 test pilotu · 6 test mühendisi · 3 prototip<br>
+      Planlama ufku: Nisan – Eylül 2026</p>
+    <p class="note">Dosya: <code>demo/scenarios/01-spring-summer-2026.json</code></p>
+  </section>
+
+  <!-- 6 DEMO 1 SCHEDULE RESULT -->
+  <section class="slide">
+    <div class="kicker">Senaryo 1 · Çizelge sonucu</div>
+    <h2>3 kampanya hedefte — biri kayıyor</h2>
+    <table>
+      <tr><th>Kampanya</th><th>Bitiş (nominal)</th><th>Hedef</th><th>Durum</th></tr>
+      <tr><td>Performance Envelope</td><td>2026-04-21</td><td>2026-05-29</td><td class="met">TUTUYOR</td></tr>
+      <tr><td>Avionics &amp; Systems</td><td>2026-04-21</td><td>2026-07-31</td><td class="met">TUTUYOR</td></tr>
+      <tr><td>Stores Separation</td><td>2026-06-15</td><td>2026-08-31</td><td class="met">TUTUYOR</td></tr>
+      <tr><td>Flutter / Aeroelastic</td><td>2026-07-03</td><td>2026-06-30</td><td class="late">GEÇ (3 gün)</td></tr>
+    </table>
+    <p class="note">Gantt'ta bakım bandı, hafta sonu/tatil gölgeleri ve deadline çizgileri
+      görünür. Soru: Flutter <b>neden</b> kayıyor?</p>
+  </section>
+
+  <!-- 7 DEMO 1 BOTTLENECK -->
+  <section class="slide">
+    <div class="kicker">Senaryo 1 · Neden?</div>
+    <h2>Bottleneck = <span class="late">Uçak</span></h2>
+    <div class="grid g2">
+      <div>
+        <p>Flutter kampanyası yalnızca <b class="accent">tek bir prototiple</b> (TC-PT03,
+        enstrümanlı flutter uçağı) uçulabilir ve her sorti <b>tüm günü</b> bağlar.</p>
+        <p>O uçak, kampanya penceresinin neredeyse tamamında
+        <b class="late">200h periyodik bakım</b> + flutter enstrümantasyonunda
+        (2026-05-01 … 06-22).</p>
+        <p>Motor bunu otomatik teşhis ediyor:</p>
+      </div>
+      <div class="card center">
+        <h3>Dominant bottleneck</h3>
+        <div class="big late">UÇAK</div>
+        <p class="big">31 gün</p>
+        <p class="muted">kampanya açık ama uçak yok</p>
+      </div>
+    </div>
+    <p class="note">Önemli: araç pilot/mühendis önermiyor — bağlayıcı kısıt onlar değil.
+      Yanlış kaynağa para harcamayı engelliyor.</p>
+  </section>
+
+  <!-- 8 DEMO 1 MONTE CARLO -->
+  <section class="slide">
+    <div class="kicker">Senaryo 1 · Hava riski</div>
+    <h2>Monte Carlo: deadline tutturma olasılığı</h2>
+    <table>
+      <tr><th>Kampanya</th><th>P(tutturma)</th><th>Medyan bitiş (P50)</th><th>Kötü senaryo (P90)</th></tr>
+      <tr><td>Performance Envelope</td><td class="met">%100</td><td>2026-04-21</td><td>2026-04-30</td></tr>
+      <tr><td>Avionics &amp; Systems</td><td class="met">%100</td><td>2026-04-21</td><td>2026-04-30</td></tr>
+      <tr><td>Stores Separation</td><td class="met">%100</td><td>2026-06-15</td><td>2026-06-18</td></tr>
+      <tr><td>Flutter / Aeroelastic</td><td class="late">%0</td><td>2026-07-02</td><td>2026-07-07</td></tr>
+    </table>
+    <p class="note">500 hava gerçekleşmesi (N=500). Flutter yapısal olarak imkânsız — hava değil,
+      uçak kısıtı. Risk sezgiye değil rakama dayanıyor.</p>
+  </section>
+
+  <!-- 9 DEMO 1 RECOMMEND -->
+  <section class="slide center">
+    <div class="kicker">Senaryo 1 · Öneri</div>
+    <h2>Araç çözümü buluyor</h2>
+    <div class="card" style="max-width:40ch">
+      <h3>Önerilen tek değişiklik</h3>
+      <p class="big">+1 uçak</p>
+      <p>Flutter / Aeroelastic:
+        <span class="pill bad">%0</span> <span class="arrow">→</span> <span class="pill good">%100</span></p>
+      <p class="muted">Tüm kampanyalar hedef güvene ulaşır.</p>
+    </div>
+    <p class="note">Greedy hill-climb: her adımda en çok iyileştiren değişikliği seçer,
+      hepsi tutana dek devam eder. Burada tek adım yeter.</p>
+  </section>
+
+  <!-- 10 DEMO 2 INTRO -->
+  <section class="slide center">
+    <div class="kicker">Canlı Demo · Senaryo 2</div>
+    <h1>Kış Test Penceresi 2026/27</h1>
+    <p class="lead">Soğuk hava &amp; buzlanma denemeleri — düşük uçulabilirlik mevsimi<br>
+      Planlama ufku: Kasım 2026 – Şubat 2027</p>
+    <p class="note">Dosya: <code>demo/scenarios/02-winter-2026-27.json</code></p>
+  </section>
+
+  <!-- 11 DEMO 2 NOMINAL TRAP -->
+  <section class="slide">
+    <div class="kicker">Senaryo 2 · Tuzak</div>
+    <h2>Nominal plan: <span class="met">hepsi yeşil</span></h2>
+    <table>
+      <tr><th>Kampanya</th><th>Bitiş (nominal)</th><th>Hedef</th><th>Durum</th></tr>
+      <tr><td>Cold-Weather Systems</td><td>2026-12-03</td><td>2026-12-11</td><td class="met">TUTUYOR</td></tr>
+      <tr><td>Icing Trials</td><td>2026-12-23</td><td>2026-12-31</td><td class="met">TUTUYOR</td></tr>
+      <tr><td>Navigation &amp; Nav-Aids</td><td>2027-02-01</td><td>2027-02-20</td><td class="met">TUTUYOR</td></tr>
+    </table>
+    <p class="lead" style="margin-top:1em">Tek bir takvime bakarsanız program güvende görünür.
+      <b class="accent">Ama bu yanıltıcı.</b></p>
+  </section>
+
+  <!-- 12 DEMO 2 MC REVEAL -->
+  <section class="slide">
+    <div class="kicker">Senaryo 2 · Gerçek</div>
+    <h2>Monte Carlo gizli riski açığa çıkarıyor</h2>
+    <table>
+      <tr><th>Kampanya</th><th>Nominal</th><th>P(tutturma)</th><th>Kötü senaryo (P90)</th></tr>
+      <tr><td>Cold-Weather Systems</td><td class="met">yeşil</td><td class="risk">%68</td><td>2027-01-04</td></tr>
+      <tr><td>Icing Trials</td><td class="met">yeşil</td><td class="risk">%76</td><td>2027-01-18</td></tr>
+      <tr><td>Navigation &amp; Nav-Aids</td><td class="met">yeşil</td><td class="risk">%88</td><td>2027-02-17</td></tr>
+    </table>
+    <p class="note">Kış havası seri (streak) halinde kötü gider. "Tutuyor" görünen plan,
+      gerçekte her 3 kıştan 1'inde Cold-Weather'ı kaçırıyor. P90'da iş Ocak'a sarkıyor.</p>
+  </section>
+
+  <!-- 13 DEMO 2 RECOMMEND -->
+  <section class="slide">
+    <div class="kicker">Senaryo 2 · Akıllı öneri</div>
+    <h2>"Parayla hava satın alınmaz"</h2>
+    <div class="grid g2">
+      <div>
+        <p>Hava bağlayıcı kısıt olduğunda <b class="late">+uçak / +pilot / +mühendis
+        işe yaramaz</b> — uçulabilir gün eklemez.</p>
+        <p>Araç bunu anlıyor ve doğru leveri seçiyor:
+          <b class="accent">sorti başına test puanını artır</b> (daha az sorti → daha az
+          uçulabilir güne ihtiyaç).</p>
+        <p>Alternatifler: pencereyi daha iyi mevsime kaydır, ya da riski bilerek kabul et.</p>
+      </div>
+      <div class="card">
+        <h3>Öneri (hedef %80)</h3>
+        <p>Icing: test puanı/sorti 3→4 &nbsp;<span class="muted">(%76→%83)</span></p>
+        <p>Cold-Weather: 5→6 &nbsp;<span class="muted">(%73→%77)</span></p>
+        <p>Cold-Weather: 6→7 &nbsp;<span class="muted">(%77→%81)</span></p>
+        <p style="margin-top:.6em">Sonuç: <span class="pill good">tümü ≥ %80</span></p>
+      </div>
+    </div>
+    <p class="note">Kullanıcı hangi leverlerin denenebileceğini seçer (checkbox). Araç dürüst:
+      hedef ulaşılamıyorsa açıkça söyler.</p>
+  </section>
+
+  <!-- 14 WHY MC -->
+  <section class="slide">
+    <div class="kicker">Yöntem</div>
+    <h2>Neden Monte Carlo + Markov?</h2>
+    <div class="grid g2">
+      <div class="card"><h3>Bağımsız günler yanıltır</h3>
+        <p>Her günü bağımsız "yazı-tura" saymak kötü hava <b>serilerini</b> hafife alır →
+        deadline güvenini <b class="bad">olduğundan yüksek</b> gösterir.</p></div>
+      <div class="card"><h3>2-durumlu Markov zinciri</h3>
+        <p>Uzun dönem oranı korunur ama hava "yapışkanlığı" (persistence) iyi/kötü
+        spellleri uzatır → gerçekçi kuyruk riski.</p></div>
+      <div class="card"><h3>Mevsimsel oranlar</h3>
+        <p>Aylık uçulabilirlik oranı: kış düşük, yaz yüksek. Kış kampanyaları
+        yaz kampanyalarından çok daha kırılgan.</p></div>
+      <div class="card"><h3>Adil karşılaştırma (CRN)</h3>
+        <p>Tüm aday çözümler <b>aynı</b> hava gerçekleşmelerinde test edilir →
+        varyans azalır, kıyas adil olur.</p></div>
+    </div>
+  </section>
+
+  <!-- 15 VALUE -->
+  <section class="slide">
+    <div class="kicker">Kazanım</div>
+    <h2>Üst yönetim için değer</h2>
+    <div class="grid g2">
+      <div class="card"><h3>Erken uyarı</h3><p>Slip aylar önce, nedeniyle birlikte görünür.</p></div>
+      <div class="card"><h3>Savunulabilir kararlar</h3><p>"+1 uçak → %0'dan %100'e" gibi
+        rakamla gerekçelendirilmiş kaynak talepleri.</p></div>
+      <div class="card"><h3>Doğru kaynağa yatırım</h3><p>Bottleneck teşhisi yanlış harcamayı
+        önler; bazen çözüm kapsam, bazen takvim — hep para değil.</p></div>
+      <div class="card"><h3>Risk şeffaflığı</h3><p>"Yeşil" plan değil, <b>%</b> ile ifade
+        edilmiş, kurula sunulabilir risk profili.</p></div>
+      <div class="card"><h3>FTOM uyumu</h3><p>Uçuş/görev saat limitleri, dinlenme, ardışık
+        uçuş günü kuralları motorda gömülü.</p></div>
+      <div class="card"><h3>What-if hızında</h3><p>Senaryo kıyas, kaynak taraması ve risk
+        analizi saniyeler içinde.</p></div>
+    </div>
+  </section>
+
+  <!-- 16 STATUS / ROADMAP -->
+  <section class="slide">
+    <div class="kicker">Durum &amp; Yol Haritası</div>
+    <h2>Bugün hazır · sırada ne var</h2>
+    <div class="grid g2">
+      <div class="card"><h3 style="color:var(--good)">Tamamlandı</h3>
+        <p>• Çizelgeleme motoru (blok modeli, FTOM limitleri, bakım/izin)</p>
+        <p>• Bottleneck analizi &amp; senaryo kıyaslama</p>
+        <p>• Monte Carlo risk + kaynak önerisi (lever seçimli)</p>
+        <p>• Gantt, Excel dışa aktarım, JSON kaydet/aç</p>
+        <p>• Avalonia MVVM masaüstü uygulaması (Win/Mac/Linux)</p></div>
+      <div class="card"><h3 style="color:var(--accent)">Faz-2 (planlı)</h3>
+        <p>• Optimizasyon katmanı (motoru sarmalayan)</p>
+        <p>• Gerçek saat-tabanlı FTOM kuralları (step-in, son iniş)</p>
+        <p>• Aya-özel hava yapışkanlığı</p>
+        <p>• Niteliğe (qualification) dayalı atama</p>
+        <p>• Gece operasyonları</p></div>
+    </div>
+  </section>
+
+  <!-- 17 CLOSE -->
+  <section class="slide center">
+    <div class="kicker">Kapanış</div>
+    <h1>Plan değil, <span style="color:var(--accent)">karar desteği</span></h1>
+    <p class="quote">"Ne zaman biter, neden kayar, ne kadar olası, nasıl düzeltilir —
+      hepsi tek araçta, rakamla."</p>
+    <p class="note">Sorular &amp; canlı deneme</p>
+  </section>
+
+</div>
+
+<div class="footer" id="footer">
+  <span>MOIRAI · Uçuş Testi Planlama &amp; Risk Analizi</span>
+  <span id="counter">1 / 17</span>
+</div>
+<div class="hint">← → / Space ile gezin · F tam ekran</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;
+    document.getElementById('prog').style.width=((i)/(slides.length-1)*100)+'%';
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){show(i+1);e.preventDefault();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(i-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key.toLowerCase()==='f'){
+      if(!document.fullscreenElement)document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+  document.getElementById('deck').addEventListener('click',e=>{
+    if(e.clientX > window.innerWidth*0.5) show(i+1); else show(i-1);
+  });
+  show(0);
+</script>
+</body>
+</html>

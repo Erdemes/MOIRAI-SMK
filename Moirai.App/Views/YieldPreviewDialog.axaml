@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        xmlns:views="using:MOIRAI.Views"
+        x:Class="MOIRAI.Views.YieldPreviewDialog"
+        x:DataType="vm:YieldPreviewViewModel"
+        Title="{Binding Title}"
+        Width="780" Height="560" CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Top" Spacing="6">
+            <TextBlock Classes="h2" Text="{Binding Title}"/>
+            <TextBlock Classes="muted" Text="{Binding Summary}"/>
+            <Border Background="{DynamicResource SidebarBg}" CornerRadius="6" Padding="10,6">
+                <TextBlock Classes="muted" FontFamily="Consolas,monospace"
+                           Text="{Binding Formula}" TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+
+        <Button DockPanel.Dock="Bottom" Content="Close" Classes="ghost" Padding="20,7"
+                HorizontalAlignment="Right" Margin="0,12,0,0" Click="OnClose"/>
+
+        <Border Classes="card" Margin="0,12,0,0">
+            <views:YieldPreviewControl Campaign="{Binding Campaign}"/>
+        </Border>
+    </DockPanel>
+</Window>

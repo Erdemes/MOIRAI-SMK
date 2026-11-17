@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MOIRAI.Views.NewExternalSupportDialog"
+        Title="New external support"
+        Width="440" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <StackPanel Margin="24" Spacing="14">
+        <TextBlock Classes="h2" Text="New external support"/>
+
+        <StackPanel Spacing="4">
+            <TextBlock Classes="label" Text="Name"/>
+            <TextBox x:Name="NameBox" PlaceholderText="e.g. KC-135R tanker / F-16 chase (113 Filo)"/>
+
+        </StackPanel>
+
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" IsVisible="False"
+                   Foreground="{DynamicResource Danger}"/>
+
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+            <Button Classes="ghost" Content="Cancel" Click="OnCancel"/>
+            <Button Content="Create" Click="OnCreate" IsDefault="True"
+                    Background="{DynamicResource Accent}" Foreground="White"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

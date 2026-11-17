@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MOIRAI.ViewModels"
+             xmlns:domain="using:MOIRAI.Domain"
+             x:Class="MOIRAI.Views.WindowPlannerView"
+             x:DataType="vm:WindowPlannerViewModel">
+
+    <StackPanel Spacing="6">
+
+        <Border BorderBrush="#2A3441" BorderThickness="1" CornerRadius="6">
+            <StackPanel>
+                <Border Background="#14FFFFFF" CornerRadius="6,6,0,0" Padding="10,6">
+                    <Grid ColumnDefinitions="92,92,46,*,30">
+                        <TextBlock Grid.Column="0" Classes="label" Text="Start"/>
+                        <TextBlock Grid.Column="1" Classes="label" Text="End"/>
+                        <TextBlock Grid.Column="2" Classes="label" Text="Days"/>
+                        <TextBlock Grid.Column="3" Classes="label" Text="Note"/>
+                    </Grid>
+                </Border>
+
+                <TextBlock Classes="muted" Text="No windows planned yet."
+                           Margin="10,8" IsVisible="{Binding IsEmpty}"/>
+
+                <ItemsControl ItemsSource="{Binding Windows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="domain:DateRange">
+                            <Border BorderBrush="#1E2733" BorderThickness="0,1,0,0" Padding="10,5">
+                                <Grid ColumnDefinitions="92,92,46,*,30">
+                                    <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                               Text="{Binding Start, StringFormat=yyyy-MM-dd}"/>
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                               Text="{Binding End, StringFormat=yyyy-MM-dd}"/>
+                                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Classes="muted"
+                                               Text="{Binding Days}"/>
+                                    <TextBlock Grid.Column="3" VerticalAlignment="Center" Classes="muted"
+                                               Text="{Binding Note}" TextTrimming="CharacterEllipsis"/>
+                                    <Button Grid.Column="4" Classes="ghost" Padding="6,0" FontSize="12"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                                            Content="✕" ToolTip.Tip="Remove window"
+                                            Command="{Binding $parent[UserControl].((vm:WindowPlannerViewModel)DataContext).RemoveCommand}"
+                                            CommandParameter="{Binding}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <Grid ColumnDefinitions="*,8,*,8,1.4*,8,Auto">
+            <CalendarDatePicker Grid.Column="0" PlaceholderText="Start Date"
+                                SelectedDate="{Binding NewStart}"
+                                SelectedDateFormat="Custom" CustomDateFormatString="yyyy-MM-dd"
+                                UseFloatingPlaceholder="True"/>
+            <CalendarDatePicker Grid.Column="2" PlaceholderText="End Date"
+                                SelectedDate="{Binding NewEnd}"
+                                SelectedDateFormat="Custom" CustomDateFormatString="yyyy-MM-dd"/>
+            <TextBox Grid.Column="4" Text="{Binding NewNote}"
+                     PlaceholderText="Note (optional)"/>
+            <Button Grid.Column="6" Content="+ Add" Command="{Binding AddCommand}"/>
+        </Grid>
+
+        <TextBlock Text="{Binding InputError}" TextWrapping="Wrap"
+                   Foreground="{DynamicResource Danger}"
+                   IsVisible="{Binding HasInputError}"/>
+    </StackPanel>
+</UserControl>

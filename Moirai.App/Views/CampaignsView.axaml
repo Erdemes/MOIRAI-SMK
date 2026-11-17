@@ -1,0 +1,616 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MOIRAI.ViewModels"
+             xmlns:domain="using:MOIRAI.Domain"
+             xmlns:views="using:MOIRAI.Views"
+             x:Class="MOIRAI.Views.CampaignsView"
+             x:DataType="vm:CampaignsViewModel">
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+        <TextBlock Grid.Row="0" Classes="h1" Text="Campaigns" Margin="0,0,0,18"/>
+
+        <Grid Grid.Row="1" ColumnDefinitions="280,18,*">
+
+            <DockPanel Grid.Column="0">
+                <DropDownButton DockPanel.Dock="Bottom" Margin="0,10,0,0"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Content="+ New">
+                    <DropDownButton.Flyout>
+                        <MenuFlyout>
+                            <MenuItem Header="A-Level campaign (phase)" Command="{Binding NewGroupCommand}"/>
+                            <MenuItem Header="B-Level campaign" Command="{Binding NewCampaignCommand}"/>
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+                <Border Classes="card" Padding="6">
+                    <TreeView Name="CampaignTree"
+                              ItemsSource="{Binding Tree}"
+                              SelectedItem="{Binding SelectedNode, Mode=TwoWay}"
+                              Background="Transparent">
+                        <TreeView.Styles>
+                            <Style Selector="TreeViewItem">
+                                <Setter Property="IsExpanded"
+                                        Value="{Binding IsExpanded, Mode=TwoWay, x:DataType=vm:CampaignTreeNode}"/>
+                            </Style>
+                        </TreeView.Styles>
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}" x:DataType="vm:CampaignTreeNode">
+                                <StackPanel Orientation="Horizontal" Spacing="8" ToolTip.Tip="{Binding Tooltip}">
+                                    <TextBlock Text="{Binding Icon}" Foreground="{DynamicResource TextMuted}"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Name}" FontSize="14" VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Classes="muted" Text="{Binding Subtitle}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Border>
+            </DockPanel>
+
+            <Border Grid.Column="2" Classes="card">
+                <Panel>
+                <TextBlock IsVisible="{Binding !HasEditor}" Classes="muted" TextWrapping="Wrap"
+                           VerticalAlignment="Top"
+                           Text="Select a phase or campaign."/>
+
+                <Grid IsVisible="{Binding EditingCampaign}" RowDefinitions="Auto,*,Auto">
+                <TextBlock Grid.Row="0" Classes="h2" Text="{Binding FormTitle}" Margin="0,0,0,14"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="14" Margin="0,0,12,0">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="label" Text="Name"/>
+                            <TextBox Text="{Binding EditName}" PlaceholderText="e.g. Envelope Expansion"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*,14,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Classes="label" Text="Total test points (TTP)"/>
+                                <NumericUpDown Value="{Binding EditTotalTestPoints}"
+                                               Minimum="0" Increment="1" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Classes="label" Text="Test points per sortie (TPS)"/>
+                                <NumericUpDown Value="{Binding EditTestPointsPerSortie}"
+                                               Minimum="0" Increment="1" FormatString="0.##"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Classes="muted" Text="{Binding RequiredSortiesText}"/>
+
+                        <Grid ColumnDefinitions="*,14,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Classes="label" Text="Start date (optional)"/>
+                                <CalendarDatePicker SelectedDate="{Binding EditStartDate, Mode=TwoWay}"
+                                                    SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Classes="label" Text="Target end date (optional)"/>
+                                <CalendarDatePicker SelectedDate="{Binding EditTargetEndDate, Mode=TwoWay}"
+                                                    SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="label" Text="Aircraft/Sim"/>
+                            <ComboBox ItemsSource="{Binding VenueOptions}"
+                                      SelectedIndex="{Binding EditVenueIndex}" Width="280"
+                                      HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*,10,*,10,*">
+                            <StackPanel Grid.Column="0" Spacing="4" IsVisible="{Binding !IsSimulatorVenue}">
+                                <TextBlock Classes="label" Text="Sortie flight hrs"/>
+                                <NumericUpDown Value="{Binding EditSortieFlightHours}"
+                                               Minimum="0" Increment="0.5" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Classes="label" Text="Sortie duty hrs"/>
+                                <NumericUpDown Value="{Binding EditSortieDutyHours}"
+                                               Minimum="0" Increment="0.5" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Spacing="4" IsVisible="{Binding !IsSimulatorVenue}">
+                                <TextBlock Classes="label" Text="Rehearsal duty hrs"/>
+                                <NumericUpDown Value="{Binding EditRehearsalDutyHours}"
+                                               Minimum="0" Increment="0.5" FormatString="0.##"
+                                               IsEnabled="{Binding EditRehearsalRequired}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <CheckBox Content="Rehearsal required"
+                                  IsChecked="{Binding EditRehearsalRequired}"
+                                  IsVisible="{Binding !IsSimulatorVenue}"/>
+
+                        <CheckBox Content="Use one aircraft per campaign"
+                                  IsChecked="{Binding EditPreferSingleAircraft}"
+                                  IsVisible="{Binding !IsSimulatorVenue}"/>
+
+                        <StackPanel Spacing="4" IsVisible="{Binding HasLocationOptions}">
+                            <TextBlock Classes="label" Text="Test location"/>
+                            <ComboBox ItemsSource="{Binding LocationOptions}"
+                                      SelectedIndex="{Binding EditLocationIndex}" Width="280"
+                                      HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="4" IsVisible="{Binding HasGroupOptions}">
+                            <TextBlock Classes="label" Text="A-Level campaign (phase)"/>
+                            <ComboBox ItemsSource="{Binding GroupOptions}"
+                                      SelectedIndex="{Binding EditGroupIndex}" Width="280"
+                                      HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <CheckBox Content="Test Efficiency" IsChecked="{Binding EditTestEfficiencyEnabled}"
+                                          VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="ghost" Content="Preview…" Padding="12,4"
+                                        Command="{Binding PreviewEfficiencyCommand}"
+                                        IsEnabled="{Binding EditTestEfficiencyEnabled}"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,10,*"
+                                  IsEnabled="{Binding EditTestEfficiencyEnabled}">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Classes="label" Text="Learning-curve model"/>
+                                    <ComboBox ItemsSource="{Binding RetestModelOptions}"
+                                              SelectedIndex="{Binding EditRetestModelIndex}"
+                                              HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Spacing="4" IsVisible="{Binding ShowRetestExponent}">
+                                    <TextBlock Classes="label" Text="Power-law exponent β"/>
+                                    <NumericUpDown Value="{Binding EditRetestExponent}" ToolTip.Tip="Higher values reduce retest probability faster."
+                                                   Minimum="0.1" Maximum="5" Increment="0.25" FormatString="0.0#"/>
+                                </StackPanel>
+
+                            </Grid>
+                            <Grid ColumnDefinitions="*,10,*,10,*,10,*"
+                                  IsEnabled="{Binding EditTestEfficiencyEnabled}">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Classes="label" Text="Retest prob. at start (0-1)"/>
+                                    <NumericUpDown Value="{Binding EditRetestStart}"
+                                                   Minimum="0" Maximum="0.95" Increment="0.05" FormatString="0.0#"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Spacing="4">
+                                    <TextBlock Classes="label" Text="Retest prob. floor (0-1)"/>
+                                    <NumericUpDown Value="{Binding EditRetestFloor}"
+                                                   Minimum="0" Maximum="0.95" Increment="0.05" FormatString="0.0#"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4" Spacing="4">
+                                    <TextBlock Classes="label" Text="Learning scale (CL1 Test points)"/>
+                                    <NumericUpDown Value="{Binding EditRetestLearningScale}"
+                                                   Minimum="0" Increment="5" FormatString="0.#"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="6" Spacing="4">
+                                    <TextBlock Classes="label" Text="Sortie abort prob. (0-1)"/>
+                                    <NumericUpDown Value="{Binding EditAbortProbability}"
+                                                   Minimum="0" Maximum="0.95" Increment="0.05" FormatString="0.0#"/>
+                                </StackPanel>
+                            </Grid>
+
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*,14,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Classes="label" Text="Blocks per sortie"/>
+                                <NumericUpDown Value="{Binding EditBlocksPerSortie}"
+                                               Minimum="1" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Classes="label" Text="Allowed start blocks (comma-separated, empty = all)"/>
+                                <TextBox Text="{Binding EditAllowedBlocks}" PlaceholderText="e.g. 1,3"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,10,*,10,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Classes="label" Text="Data review between flying days (working days, 0 = none)"/>
+                                <NumericUpDown Value="{Binding EditReviewWorkdays}"
+                                               Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Classes="label" Text="Max sorties per day (0 = unlimited)"/>
+                                <NumericUpDown Value="{Binding EditMaxSortiesPerDay}"
+                                               Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Spacing="4">
+                                <TextBlock Classes="label" Text="Off days after completion (0 = none)"/>
+                                <NumericUpDown Value="{Binding EditRestDaysAfterCompletion}"
+                                               Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,14,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Classes="label" Text="Data review after completion (working days, 0 = none)"/>
+                                <NumericUpDown Value="{Binding EditPostReviewWorkdays}"
+                                               Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Expander Classes="section" Header="Working calendar" IsExpanded="False">
+                            <StackPanel Spacing="8">
+                                <CheckBox Content="Use global working calendar (Planning settings)"
+                                          IsChecked="{Binding EditUseGlobalCalendar}"/>
+                                <StackPanel Spacing="6" IsVisible="{Binding !EditUseGlobalCalendar}">
+                                    <TextBlock Classes="label" Text="Weekend days (non-working for this campaign)"/>
+                                    <WrapPanel>
+                                        <CheckBox Content="Mon" IsChecked="{Binding EditWeekendMonday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Tue" IsChecked="{Binding EditWeekendTuesday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Wed" IsChecked="{Binding EditWeekendWednesday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Thu" IsChecked="{Binding EditWeekendThursday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Fri" IsChecked="{Binding EditWeekendFriday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Sat" IsChecked="{Binding EditWeekendSaturday}" Margin="0,0,12,0"/>
+                                        <CheckBox Content="Sun" IsChecked="{Binding EditWeekendSunday}" Margin="0,0,12,0"/>
+                                    </WrapPanel>
+                                    <CheckBox Content="Work on holidays" IsChecked="{Binding EditWorkOnHolidays}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <Expander Classes="section" Header="Flyable days" IsExpanded="False"
+                                  IsVisible="{Binding !IsSimulatorVenue}">
+                            <StackPanel Spacing="8">
+                                <CheckBox Content="Use global flyable days (Planning settings / test location)"
+                                          IsChecked="{Binding EditUseGlobalFlyable}"/>
+                                <StackPanel Spacing="8" IsVisible="{Binding !EditUseGlobalFlyable}">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Classes="label" Text="Weather model"/>
+                                        <ComboBox SelectedIndex="{Binding EditFlyModelIndex}" Width="300" HorizontalAlignment="Left">
+                                            <ComboBoxItem Content="Uniform rate"/>
+                                            <ComboBoxItem Content="Seasonal (monthly rates)"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Spacing="4" IsVisible="{Binding IsFlyUniform}">
+                                        <TextBlock Classes="label" Text="Flyable rate (0-1)"/>
+                                        <NumericUpDown Value="{Binding EditFlyRate}" Minimum="0" Maximum="1"
+                                                       Increment="0.05" FormatString="0.0#" Width="140" HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                    <StackPanel Spacing="4" IsVisible="{Binding IsFlySeasonal}">
+                                        <TextBlock Classes="label" Text="Monthly flyable rates (0-1)"/>
+                                        <ItemsControl ItemsSource="{Binding FlyMonthlyRates}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <UniformGrid Columns="4"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:MonthRateOption">
+                                                    <StackPanel Spacing="2" Margin="0,0,10,10">
+                                                        <TextBlock Classes="label" Text="{Binding Month}"/>
+                                                        <NumericUpDown Value="{Binding Rate}" Minimum="0" Maximum="1"
+                                                                       MinWidth="110" Increment="0.05" FormatString="0.0#"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Classes="label" Text="Persistence φ (0-0.98)"/>
+                                        <NumericUpDown Value="{Binding EditFlyPersistence}" Minimum="0" Maximum="0.98"
+                                                       Increment="0.05" FormatString="0.0#" Width="150" HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <Expander Classes="section" Header="Operational limits" IsExpanded="False">
+                            <StackPanel Spacing="10">
+                                <CheckBox Content="Use global operational limits (Planning settings)"
+                                          IsChecked="{Binding EditUseGlobalLimits}"/>
+                                <StackPanel Spacing="10" IsVisible="{Binding !EditUseGlobalLimits}">
+                                    <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                        <StackPanel Grid.Column="0" Spacing="4">
+                                            <TextBlock Classes="label" Text="Max sorties / person / day"/>
+                                            <NumericUpDown Value="{Binding EditLimSortiesPerDay}" Minimum="0" Increment="1" FormatString="0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="4">
+                                            <TextBlock Classes="label" Text="Max rehearsals / person / day"/>
+                                            <NumericUpDown Value="{Binding EditLimRehearsalsPerDay}" Minimum="0" Increment="1" FormatString="0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Spacing="4">
+                                            <TextBlock Classes="label" Text="Max rehearsal gap (working days)"/>
+                                            <NumericUpDown Value="{Binding EditLimRehearsalGapDays}" Minimum="0" Increment="1" FormatString="0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="6" Spacing="4">
+                                            <TextBlock Classes="label" Text="Max consecutive flying days"/>
+                                            <NumericUpDown Value="{Binding EditLimConsecutiveDays}" Minimum="0" Increment="1" FormatString="0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                        <StackPanel Grid.Column="0" Spacing="4">
+                                            <TextBlock Classes="label" Text="Min rest (hours)"/>
+                                            <NumericUpDown Value="{Binding EditLimMinRestHours}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <CheckBox Grid.Column="2" Grid.ColumnSpan="5" Content="Rehearsals on workdays only"
+                                                  IsChecked="{Binding EditLimRehearsalOnWorkdaysOnly}" VerticalAlignment="Bottom"/>
+                                    </Grid>
+                                    <TextBlock Classes="label" Text="Flight-hour caps" Margin="0,4,0,0"/>
+                                    <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                        <StackPanel Grid.Column="0" Spacing="4">
+                                            <TextBlock Classes="label" Text="per day"/>
+                                            <NumericUpDown Value="{Binding EditLimFlightPerDay}" Minimum="0" Increment="0.5" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="4">
+                                            <TextBlock Classes="label" Text="per 7 days"/>
+                                            <NumericUpDown Value="{Binding EditLimFlightPer7Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Spacing="4">
+                                            <TextBlock Classes="label" Text="per 28 days"/>
+                                            <NumericUpDown Value="{Binding EditLimFlightPer28Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="6" Spacing="4">
+                                            <TextBlock Classes="label" Text="per year"/>
+                                            <NumericUpDown Value="{Binding EditLimFlightPerYear}" Minimum="0" Increment="10" FormatString="0.##"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <TextBlock Classes="label" Text="Duty-hour caps" Margin="0,4,0,0"/>
+                                    <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+                                        <StackPanel Grid.Column="0" Spacing="4">
+                                            <TextBlock Classes="label" Text="per day"/>
+                                            <NumericUpDown Value="{Binding EditLimDutyPerDay}" Minimum="0" Increment="0.5" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="4">
+                                            <TextBlock Classes="label" Text="per 7 days"/>
+                                            <NumericUpDown Value="{Binding EditLimDutyPer7Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Spacing="4">
+                                            <TextBlock Classes="label" Text="per 14 days"/>
+                                            <NumericUpDown Value="{Binding EditLimDutyPer14Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="6" Spacing="4">
+                                            <TextBlock Classes="label" Text="per 28 days"/>
+                                            <NumericUpDown Value="{Binding EditLimDutyPer28Days}" Minimum="0" Increment="1" FormatString="0.##"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <Grid ColumnDefinitions="*,14,*">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Classes="label" Text="Pilots per sortie (0 = scenario default)"/>
+                                <NumericUpDown Value="{Binding EditPilotsPerSortie}"
+                                               Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Classes="label" Text="FTEs per sortie (0 = scenario default)"/>
+                                <NumericUpDown Value="{Binding EditEngineersPerSortie}"
+                                               Minimum="0" Increment="1" FormatString="0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Spacing="6" IsVisible="{Binding !IsSimulatorVenue}">
+                            <TextBlock Classes="label" Text="Compatible aircraft"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding AircraftOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6" IsVisible="{Binding HasSimulatorOptions}">
+                            <TextBlock Classes="label" Text="Compatible simulators (none = all at base)"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding SimulatorOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6" IsVisible="{Binding !IsSimulatorVenue}">
+                            <Grid ColumnDefinitions="Auto,16,*">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Classes="label" Text="Support aircraft / sortie"/>
+                                    <NumericUpDown Value="{Binding EditSupportPerSortie}" Minimum="0" Increment="1"
+                                                   FormatString="0" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Spacing="4">
+                                    <TextBlock Classes="label" Text="Support aircraft pool"/>
+                                    <Border Classes="row">
+                                        <ItemsControl ItemsSource="{Binding SupportAircraftOptions}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:SelectableOption">
+                                                    <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                              Margin="0,0,16,2"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6" IsVisible="{Binding ShowExternalList}">
+                            <TextBlock Classes="label" Text="Required external support"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding ExternalSupportOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            <TextBlock Classes="muted" TextWrapping="Wrap"
+                                       Text="External support uses no program crew or flight hours."/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Assigned pilots"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding PilotOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Assigned FTEs"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding EngineerOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Prerequisites"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding PrerequisiteOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6" IsVisible="{Binding HasMaintenancePrereqOptions}">
+                            <TextBlock Classes="label" Text="Prerequisite maintenance"/>
+                            <Border Classes="row">
+                                <ItemsControl ItemsSource="{Binding MaintenancePrereqOptions}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:SelectableOption">
+                                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                      Margin="0,0,16,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <StackPanel Grid.Row="2" Spacing="10" Margin="0,14,0,0">
+                    <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                               Foreground="{DynamicResource Danger}"
+                               IsVisible="{Binding HasError}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Save" Command="{Binding SaveCommand}"
+                                Background="{DynamicResource Accent}" Foreground="White"/>
+                        <Button Classes="danger" Content="Delete"
+                                Command="{Binding DeleteCommand}"
+                                IsEnabled="{Binding CanDelete}"/>
+                    </StackPanel>
+                </StackPanel>
+                </Grid>
+
+                <Grid IsVisible="{Binding EditingGroup}" RowDefinitions="Auto,*,Auto">
+                    <TextBlock Grid.Row="0" Classes="h2" Text="{Binding GroupFormTitle}" Margin="0,0,0,14"/>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Spacing="14" Margin="0,0,12,0">
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="label" Text="Name"/>
+                                <TextBox Text="{Binding EditGroupName}" PlaceholderText="e.g. Envelope Expansion"/>
+                            </StackPanel>
+
+                            <Grid ColumnDefinitions="*,14,*">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Classes="label" Text="Target start"/>
+                                    <CalendarDatePicker SelectedDate="{Binding EditGroupTargetStart, Mode=TwoWay}"
+                                                        SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Spacing="4">
+                                    <TextBlock Classes="label" Text="Target end"/>
+                                    <CalendarDatePicker SelectedDate="{Binding EditGroupTargetEnd, Mode=TwoWay}"
+                                                        SelectedDateFormat="Short" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock Classes="label" Text="Prerequisite A-Level campaigns"/>
+                                <Border Classes="row">
+                                    <ItemsControl ItemsSource="{Binding GroupPrereqOptions}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:SelectableOption">
+                                                <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                          Margin="0,0,16,2"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2" Spacing="10" Margin="0,14,0,0">
+                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource Danger}" IsVisible="{Binding HasError}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Content="Save" Command="{Binding SaveGroupCommand}"
+                                    Background="{DynamicResource Accent}" Foreground="White"/>
+                            <Button Classes="danger" Content="Delete"
+                                    Command="{Binding DeleteGroupCommand}"
+                                    IsEnabled="{Binding CanDeleteGroup}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                </Panel>
+            </Border>
+        </Grid>
+
+        <Expander Grid.Row="2" Classes="panel" Margin="0,18,0,0" IsExpanded="False">
+            <Expander.Header>
+                <TextBlock Classes="h2" Text="Campaign Calendar"/>
+            </Expander.Header>
+            <StackPanel Spacing="8" Margin="18,8,18,18">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto" MaxHeight="320">
+                    <views:WindowsCalendarControl Data="{Binding CalendarData}"
+                                                  Interactive="True"
+                                                  WindowChangedCommand="{Binding ApplyWindowChangeCommand}"/>
+                </ScrollViewer>
+            </StackPanel>
+        </Expander>
+    </Grid>
+</UserControl>

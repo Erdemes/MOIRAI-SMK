@@ -1,0 +1,154 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        xmlns:views="using:MOIRAI.Views"
+        xmlns:b="using:MOIRAI.Views.Behaviors"
+        x:Class="MOIRAI.Views.McGanttWindow"
+        x:DataType="vm:McGanttViewModel"
+        Title="{Binding Title}"
+        Width="1400" Height="800" WindowState="Maximized"
+        Background="{DynamicResource AppBg}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+        <StackPanel Spacing="12">
+
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto,16,Auto,16,Auto">
+                        <TextBlock Grid.Column="0" Classes="h2" Text="Filter (Gantt &amp; burn-down)"
+                                   VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Content="Mark idle days"
+                                  IsChecked="{Binding Filter.ShowIdleMarkers}" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="3" Content="Hide non-flyable days"
+                                  IsChecked="{Binding Filter.HideNonFlyableDays}"
+                                  VerticalAlignment="Center" ToolTip.Tip="Hide unusable days unless they contain scheduled work."/>
+                        <Button Grid.Column="5" Classes="ghost" Content="Clear" Padding="10,4"
+                                Command="{Binding Filter.ClearFiltersCommand}"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,14,*,14,*,14,*">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Classes="label" Text="Campaigns"/>
+                            <ItemsControl ItemsSource="{Binding Filter.CampaignFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Classes="label" Text="Aircraft"/>
+                            <ItemsControl ItemsSource="{Binding Filter.AircraftFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" Spacing="4">
+                            <TextBlock Classes="label" Text="Pilots"/>
+                            <ItemsControl ItemsSource="{Binding Filter.PilotFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6" Spacing="4">
+                            <TextBlock Classes="label" Text="FTEs"/>
+                            <ItemsControl ItemsSource="{Binding Filter.FteFilterOptions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SelectableOption">
+                                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}"
+                                                  Margin="0,0,12,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Classes="muted" Text="{Binding Filter.FilterSummary}"
+                               IsVisible="{Binding Filter.IsFiltered}"/>
+                </StackPanel>
+            </Border>
+
+            <Expander Classes="panel" IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Schedule (Gantt)"/>
+                </Expander.Header>
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,12,Auto,10,Auto">
+                        <ItemsControl Grid.Column="0" ItemsSource="{Binding LegendItems}"
+                                      VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:GanttLegendItem">
+                                    <StackPanel Orientation="Horizontal" Spacing="5"
+                                                Margin="0,2,14,2" VerticalAlignment="Center">
+                                        <Border Width="12" Height="12" CornerRadius="2"
+                                                Background="{Binding Swatch}"
+                                                IsVisible="{Binding IsSwatchVisible}"
+                                                BorderBrush="{DynamicResource BorderSoft}"
+                                                BorderThickness="1" VerticalAlignment="Center"/>
+                                        <TextBlock Classes="muted" Text="{Binding Label}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Grid.Column="2" Classes="muted" Text="Zoom" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="4" x:Name="GanttZoom" Minimum="0.5" Maximum="2.5"
+                                Value="1.4" Width="200" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ScrollViewer x:Name="GanttScroll" HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto" MaxHeight="480"
+                                  b:MiddleButtonPan.Enabled="True">
+                        <LayoutTransformControl x:Name="GanttScaler">
+                            <views:GanttControl Data="{Binding Filter.Gantt}"
+                                                HideEmptyDays="{Binding Filter.HideNonFlyableDays}"
+                                                ShowIdleMarkers="{Binding Filter.ShowIdleMarkers}"/>
+                        </LayoutTransformControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Expander>
+
+            <Expander Classes="panel" IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Classes="h2" Text="Test points (burn-down)"/>
+                </Expander.Header>
+                <StackPanel Spacing="8">
+                    <TextBlock Classes="muted" TextWrapping="Wrap"
+                               Text="Dashed lines: campaign targets. Red line: master deadline."/>
+                    <ScrollViewer x:Name="TpScroll" HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled" Height="420"
+                                  b:MiddleButtonPan.Enabled="True">
+                        <LayoutTransformControl x:Name="TpScaler">
+                            <views:TestPointsChartControl Data="{Binding Filter.TestPointsGantt}"
+                                                          HideEmptyDays="{Binding Filter.HideNonFlyableDays}"
+                                                          FillHeight="True"
+                                                          Height="{Binding #TpScroll.Viewport.Height}"/>
+                        </LayoutTransformControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

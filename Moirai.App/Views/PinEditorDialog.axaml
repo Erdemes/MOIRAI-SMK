@@ -1,0 +1,100 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        x:Class="MOIRAI.Views.PinEditorDialog"
+        x:DataType="vm:PinEditorViewModel"
+        Title="{Binding Title}"
+        Width="520" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <StackPanel Margin="24" Spacing="14">
+        <StackPanel Spacing="2">
+            <TextBlock Classes="h2" Text="{Binding Title}"/>
+            <TextBlock Classes="muted" Text="{Binding Planned}"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <CheckBox Content="Pin the day" IsChecked="{Binding PinDay}" VerticalAlignment="Center"/>
+            <CalendarDatePicker SelectedDate="{Binding PinDate, Mode=TwoWay}" IsEnabled="{Binding PinDay}"
+                                SelectedDateFormat="Custom" CustomDateFormatString="dd.MM.yyyy ddd"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4" IsVisible="{Binding IsAircraftVenue}">
+            <TextBlock Classes="label" Text="Aircraft"/>
+            <ComboBox ItemsSource="{Binding AircraftChoices}" SelectedItem="{Binding SelectedAircraft}"
+                      HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4" IsVisible="{Binding IsSimVenue}">
+            <TextBlock Classes="label" Text="Simulator"/>
+            <ComboBox ItemsSource="{Binding SimulatorChoices}" SelectedItem="{Binding SelectedSimulator}"
+                      HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Classes="label" Text="Pilots"/>
+            <ItemsControl ItemsSource="{Binding Pilots}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SelectableOption">
+                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" Margin="0,0,14,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Classes="label" Text="FTEs"/>
+            <ItemsControl ItemsSource="{Binding Engineers}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SelectableOption">
+                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" Margin="0,0,14,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Spacing="4" IsVisible="{Binding HasSupport}">
+            <TextBlock Classes="label" Text="Support ships"/>
+            <ItemsControl ItemsSource="{Binding SupportAircraft}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SelectableOption">
+                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" Margin="0,0,14,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Classes="label" Text="Support pilots" Margin="0,6,0,0"/>
+            <ItemsControl ItemsSource="{Binding SupportPilots}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SelectableOption">
+                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" Margin="0,0,14,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <TextBlock Classes="muted" Text="{Binding NeedText}"/>
+        <TextBlock Text="{Binding Warnings}" IsVisible="{Binding HasWarnings}" TextWrapping="Wrap"
+                   Foreground="{DynamicResource Warning}"/>
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" IsVisible="False"
+                   Foreground="{DynamicResource Danger}"/>
+
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+            <Button Classes="ghost" Content="Cancel" Click="OnCancel"/>
+            <Button Content="Pin" Click="OnPin" IsDefault="True"
+                    Background="{DynamicResource Accent}" Foreground="White"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

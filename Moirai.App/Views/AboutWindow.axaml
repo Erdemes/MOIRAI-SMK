@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MOIRAI.ViewModels"
+        x:Class="MOIRAI.Views.AboutWindow"
+        x:DataType="vm:AboutViewModel"
+        Title="About MOIRAI"
+        Width="760" Height="560"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBg}">
+
+    <Grid ColumnDefinitions="300,*" Margin="0">
+
+        <Border Grid.Column="0" Background="{DynamicResource SidebarBg}"
+                BorderBrush="{DynamicResource BorderSoft}" BorderThickness="0,0,1,0">
+            <StackPanel Margin="28,32" Spacing="10" VerticalAlignment="Top">
+                <Image Source="/Assets/moirai-lockup.png" Width="244"
+                       HorizontalAlignment="Center"/>
+                <TextBlock Text="Flight Test Planning &amp; Risk Analysis"
+                           Classes="muted" HorizontalAlignment="Center"
+                           TextAlignment="Center" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Version, StringFormat='Version {0}'}"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource Accent}" FontWeight="SemiBold"
+                           Margin="0,4,0,0"/>
+
+                <StackPanel Spacing="8" Margin="0,18,0,0">
+                    <Button Content="Check for updates" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Command="{Binding CheckForUpdatesCommand}"
+                            IsEnabled="{Binding NotChecking}"
+                            Background="{DynamicResource Accent}" Foreground="White"
+                            Padding="12,8"/>
+                    <Button Content="Project on GitHub" Classes="ghost"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Command="{Binding OpenProjectPageCommand}" Padding="12,8"/>
+                    <TextBlock Text="{Binding UpdateStatus}" TextWrapping="Wrap"
+                               Foreground="{Binding UpdateStatusBrush}" FontSize="12"
+                               Margin="0,4,0,0"/>
+                    <Button Content="Open download page" Classes="ghost"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            IsVisible="{Binding HasUpdateUrl}"
+                            Command="{Binding OpenDownloadPageCommand}" Padding="12,8"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <DockPanel Grid.Column="1" Margin="24,28">
+            <TextBlock DockPanel.Dock="Top" Classes="h1" Text="What’s new"/>
+            <TextBlock DockPanel.Dock="Bottom" Classes="muted"
+                       Text="{Binding Copyright}" Margin="0,12,0,0"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,12,0,0">
+                <ItemsControl ItemsSource="{Binding Changelog}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ChangelogEntry">
+                            <Border Classes="card" Margin="0,0,0,12">
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="{Binding Header}" Classes="h2"
+                                               Foreground="{DynamicResource Accent}"/>
+                                    <ItemsControl ItemsSource="{Binding Changes}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid ColumnDefinitions="14,*" Margin="0,2">
+                                                    <TextBlock Grid.Column="0" Text="•"
+                                                               Foreground="{DynamicResource TextMuted}"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding}"
+                                                               TextWrapping="Wrap"
+                                                               Foreground="{DynamicResource TextPrimary}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</Window>
