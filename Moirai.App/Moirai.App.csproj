@@ -22,7 +22,7 @@
         <None Update="update-config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Include="..\docs\manual\MOIRAI-User-Manual.pdf" Link="MOIRAI-User-Manual.pdf">
+        <None Update="MOIRAI-User-Manual.pdf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
